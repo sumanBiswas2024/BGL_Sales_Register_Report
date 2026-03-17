@@ -1,0 +1,137 @@
+{
+  "_version": "1.80.0",
+  "sap.app": {
+    "id": "com.bgl.app.salesregister",
+    "type": "application",
+    "i18n": "i18n/i18n.properties",
+    "applicationVersion": {
+      "version": "0.0.1"
+    },
+    "title": "{{appTitle}}",
+    "description": "{{appDescription}}",
+    "resources": "resources.json",
+    "sourceTemplate": {
+      "id": "@sap/generator-fiori:basic",
+      "version": "1.21.0",
+      "toolsId": "02dfec55-af07-4237-bf6c-f4078cbcc3c5"
+    },
+    "dataSources": {
+      "ZSB_SAL_REGISTER_VAN": {
+        "uri": "/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Annotations(TechnicalName='ZSB_SAL_REGISTER_VAN',Version='0001')/$value/",
+        "type": "ODataAnnotation",
+        "settings": {
+          "localUri": "localService/mainService/ZSB_SAL_REGISTER_VAN.xml"
+        }
+      },
+      "mainService": {
+        "uri": "/sap/opu/odata/sap/ZSB_SAL_REGISTER/",
+        "type": "OData",
+        "settings": {
+          "annotations": [
+            "ZSB_SAL_REGISTER_VAN"
+          ],
+          "localUri": "localService/mainService/metadata.xml",
+          "odataVersion": "2.0"
+        }
+      }
+    },
+    "crossNavigation": {
+      "inbounds": {
+        "zso_sales_register-manage": {
+          "semanticObject": "zso_sales_register",
+          "action": "manage",
+          "title": "{{zso_sales_register-manage.flpTitle}}",
+          "subTitle": "{{zso_sales_register-manage.flpSubtitle}}",
+          "signature": {
+            "parameters": {},
+            "additionalParameters": "allowed"
+          }
+        }
+      }
+    }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "icons": {
+      "icon": "",
+      "favIcon": "",
+      "phone": "",
+      "phone@2": "",
+      "tablet": "",
+      "tablet@2": ""
+    },
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "flexEnabled": true,
+    "dependencies": {
+      "minUI5Version": "1.142.7",
+      "libs": {
+        "sap.m": {},
+        "sap.ui.core": {}
+      }
+    },
+    "contentDensities": {
+      "compact": true,
+      "cozy": true
+    },
+    "models": {
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "settings": {
+          "bundleName": "com.bgl.app.salesregister.i18n.i18n"
+        }
+      },
+      "": {
+        "dataSource": "mainService",
+        "preload": true,
+        "settings": {}
+      }
+    },
+    "resources": {
+      "css": [
+        {
+          "uri": "css/style.css"
+        }
+      ]
+    },
+    "routing": {
+      "config": {
+        "routerClass": "sap.m.routing.Router",
+        "controlAggregation": "pages",
+        "controlId": "app",
+        "transition": "slide",
+        "type": "View",
+        "viewType": "XML",
+        "path": "com.bgl.app.salesregister.view",
+        "async": true,
+        "viewPath": "com.bgl.app.salesregister.view"
+      },
+      "routes": [
+        {
+          "name": "RouteSalesRegister",
+          "pattern": ":?query:",
+          "target": [
+            "TargetSalesRegister"
+          ]
+        }
+      ],
+      "targets": {
+        "TargetSalesRegister": {
+          "id": "SalesRegister",
+          "name": "SalesRegister"
+        }
+      }
+    },
+    "rootView": {
+      "viewName": "com.bgl.app.salesregister.view.App",
+      "type": "XML",
+      "id": "App",
+      "async": true
+    }
+  }
+}

@@ -1,0 +1,26 @@
+# yaml-language-server: $schema=https://sap.github.io/ui5-tooling/schema/ui5.yaml.json
+
+specVersion: "4.0"
+metadata:
+  name: com.bgl.app.salesregister
+type: application
+builder:
+  resources:
+    excludes:
+      - /test/**
+      - /localService/**
+  customTasks:
+    - name: deploy-to-abap
+      afterTask: generateCachebusterInfo
+      configuration:
+        target:
+          destination: my416236_SAML_ASSERTION
+          url: https://my416236.s4hana.cloud.sap
+          authenticationType: reentranceTicket # SAML support for vscode
+        app:
+          name: ZSALES_REGISTER
+          description: Sales Register
+          package: ZFIORI
+          transport: KUNK900891
+        exclude:
+          - /test/
