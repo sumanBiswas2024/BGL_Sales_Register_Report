@@ -1,1 +1,60 @@
-/* Enter your custom styles here */
+/* 
+.columnHeaderBold {
+    font-weight: bold;
+}
+.boldHeader .sapMColumnHeader .sapMText {
+    font-weight: bold !important;
+}
+.sapMColumnHeader .sapMText {
+    font-size: .875rem;
+    color: #32363a;
+    font-weight: bold;
+}
+.sapUiTableHeaderDataCell .sapMText, .sapMColumnHeader .sapMText {
+    font-weight: bold;
+    font-size: .875rem;
+    color: #32363a;
+}
+.customTableHeight {
+    height: 600px; 
+    overflow-y: auto;
+}
+.tableWrapper {
+    height: 410px;
+    overflow-y: auto;
+    overflow-x: auto;
+  }
+  .sapMLabel {
+    color: #101010;
+    font-size: .875rem;
+    font-family: "72", "72full", Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    display: inline-block;
+    white-space: nowrap;
+    cursor: text;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+
+   */
+
+   /* Grand Total row — green highlight strip + bold text */
+.sapMLIBHighlight-Success .sapMText,
+.sapMLIBHighlight-Success .sapMObjectNumberText,
+.sapMLIBHighlight-Success .sapMObjectNumberUnit {
+    font-weight: bold !important;
+}
+ 
+.sapMLIBHighlight-Success {
+    background-color: #f0faf0 !important;
+}
+ 
+/* Sticky table header */
+.tableWrapper .sapMListTblHeader {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: #fff;
+}
+ 
