@@ -405,11 +405,39 @@ sap.ui.define([
                 "Tcs", "TcsPer", "InvoiceValue", "DailyAuthQty"
             ];
 
+            // var aExportRows = aAllRows.map(function (oRow) {
+            //     var oExport = Object.assign({}, oRow);
+            //     if (oExport.IsGrandTotal) {
+            //         oExport.BillingDocumentDate = "Grand Total";
+            //         oExport.BillingDocument = "";
+            //     }
+            //     // Convert string decimals to numbers so Excel scale formatting works correctly
+            //     aNumericFields.forEach(function (sField) {
+            //         if (oExport[sField] !== null && oExport[sField] !== undefined) {
+            //             oExport[sField] = parseFloat(oExport[sField]) || 0;
+            //         }
+            //     });
+            //     return oExport;
+            // });
+
             var aExportRows = aAllRows.map(function (oRow) {
                 var oExport = Object.assign({}, oRow);
                 if (oExport.IsGrandTotal) {
                     oExport.BillingDocumentDate = "Grand Total";
                     oExport.BillingDocument = "";
+                } else {
+                    // Format date as DD/MM/YYYY for Excel (same as table display)
+                    if (oExport.BillingDocumentDate) {
+                        var d = oExport.BillingDocumentDate instanceof Date
+                            ? oExport.BillingDocumentDate
+                            : new Date(oExport.BillingDocumentDate);
+                        if (!isNaN(d.getTime())) {
+                            oExport.BillingDocumentDate =
+                                ("0" + d.getDate()).slice(-2) + "/" +
+                                ("0" + (d.getMonth() + 1)).slice(-2) + "/" +
+                                d.getFullYear();
+                        }
+                    }
                 }
                 // Convert string decimals to numbers so Excel scale formatting works correctly
                 aNumericFields.forEach(function (sField) {
