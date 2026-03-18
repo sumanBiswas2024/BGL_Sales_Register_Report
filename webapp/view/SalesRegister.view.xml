@@ -10,6 +10,7 @@
     <f:DynamicPage
         id="pageId"
         headerExpanded="true"
+        preserveHeaderStateOnScroll="true"
     >
         <f:title>
             <f:DynamicPageTitle>
@@ -41,6 +42,7 @@
                         id="filterbar"
                         persistencyKey="salesKey"
                         search=".onSearch"
+                        useToolbar="false"
                     >
                         <fb:filterGroupItems>
                             <fb:FilterGroupItem
