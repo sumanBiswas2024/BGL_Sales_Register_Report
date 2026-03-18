@@ -9,7 +9,7 @@
 
 /* ── Table scroll wrapper ─────────────────────────────────────── */
 .tableWrapper {
-    height: 370px;
+    height: 340px;
     overflow-y: auto;
     overflow-x: auto;
 }
