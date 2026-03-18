@@ -87,6 +87,50 @@ sap.ui.define([
             }
             return isValid;
         },
+        onDateChange: function (oEvent) {
+            var oFromDate = this.byId("idFromDate");
+            var oToDate = this.byId("idToDate");
+            var sFrom = oFromDate.getValue();
+            var sTo = oToDate.getValue();
+
+            if (!sFrom || !sTo) {
+                oFromDate.setValueState(sap.ui.core.ValueState.None);
+                oToDate.setValueState(sap.ui.core.ValueState.None);
+                return;
+            }
+
+            var dFrom = new Date(sFrom);
+            var dTo = new Date(sTo);
+
+            if (dFrom > dTo) {
+                // Clear whichever field the user just changed
+                var oSource = oEvent.getSource();
+                oSource.setValue("");
+                oSource.setValueState(sap.ui.core.ValueState.Error);
+                oSource.setValueStateText(
+                    oSource === oFromDate
+                        ? "From Date cannot be later than To Date"
+                        : "To Date cannot be earlier than From Date"
+                );
+            } else {
+                oFromDate.setValueState(sap.ui.core.ValueState.None);
+                oToDate.setValueState(sap.ui.core.ValueState.None);
+            }
+        },
+        // onDateChange: function () {
+        //     var oFromDate = this.getView().byId("idFromDate");
+        //     var oToDate = this.getView().byId("idToDate");
+
+        //     var sFromDate = oFromDate.getDateValue();
+        //     var sToDate = oToDate.getDateValue();
+
+        //     if (sFromDate && sToDate) {
+        //         if (sToDate < sFromDate) {
+        //             sap.m.MessageBox.error("To Date cannot be earlier than From Date.");
+        //             oToDate.setValue("");
+        //         }
+        //     }
+        // },
 
         // ─── Search / OData Call ──────────────────────────────────────────────────
         onSearch: function () {

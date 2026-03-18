@@ -57,6 +57,7 @@
                                         valueFormat="yyyy-MM-dd"
                                         displayFormat="dd/MM/yyyy"
                                         required="true"
+                                        change=".onDateChange"
                                     />
                                 </fb:control>
                             </fb:FilterGroupItem>
@@ -72,6 +73,7 @@
                                         valueFormat="yyyy-MM-dd"
                                         displayFormat="dd/MM/yyyy"
                                         required="true"
+                                        change=".onDateChange"
                                     />
                                 </fb:control>
                             </fb:FilterGroupItem>
