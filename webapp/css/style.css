@@ -57,4 +57,11 @@
     z-index: 2;
     background: #fff;
 }
+.tableWrapper {
+    height: 370px;
+    overflow-y: auto;
+    overflow-x: auto;
+  }
+
+  
  

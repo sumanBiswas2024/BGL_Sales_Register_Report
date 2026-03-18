@@ -13,7 +13,7 @@
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                    <Title text="Sales Register Report" />
+                    <!-- <Title text="Sales Register Report" /> -->
                 </f:heading>
             </f:DynamicPageTitle>
         </f:title>
@@ -109,202 +109,53 @@
                     >
                         <columns>
                             <!-- ── Core / Green columns ──────────────────────── -->
-                            <Column width="9rem">
-                                <Text text="Invoice Date" />
-                            </Column>
-                            <Column width="8rem">
-                                <Text text="Invoice Month" />
-                            </Column>
-                            <Column width="6rem">
-                                <Text text="Fiscal Year" />
-                            </Column>
-                            <Column width="9rem">
-                                <Text text="Invoice No" />
-                            </Column>
-                            <Column width="8rem">
-                                <Text text="Sold To Code" />
-                            </Column>
-                            <Column width="12rem">
-                                <Text text="Sold To Name" />
-                            </Column>
-                            <Column width="10rem">
-                                <Text text="Sale Type" />
-                            </Column>
-                            <Column width="10rem">
-                                <Text text="Billing Doc Status" />
-                            </Column>
-                            <Column width="12rem">
-                                <Text text="Sales District (Charge Area)" />
-                            </Column>
-                            <Column width="12rem">
-                                <Text text="Acct Assmt Grp / Sales Group" />
-                            </Column>
-                            <Column width="10rem">
-                                <Text text="Customer Type" />
-                            </Column>
-                            <Column width="5rem">
-                                <Text text="Item" />
-                            </Column>
-                            <Column width="8rem">
-                                <Text text="Profit Centre" />
-                            </Column>
-                            <Column width="8rem">
-                                <Text text="Ship To Code" />
-                            </Column>
-                            <Column width="12rem">
-                                <Text text="Ship To Name" />
-                            </Column>
-                            <Column width="8rem">
-                                <Text text="GA of BGL" />
-                            </Column>
-                            <Column width="10rem">
-                                <Text text="Material Code" />
-                            </Column>
-                            <Column width="14rem">
-                                <Text text="Material Name" />
-                            </Column>
-                            <Column
-                                width="8rem"
-                                hAlign="End"
-                            >
-                                <Text text="Billing Qty" />
-                            </Column>
-                            <Column width="5rem">
-                                <Text text="Billing UOM" />
-                            </Column>
+                            <Column width="35rem"><Text text="Invoice Date" wrapping="false"/></Column>
+                            <Column width="35rem"><Text text="Invoice Month" wrapping="false"/></Column>
+                            <Column width="35rem"><Text text="Fiscal Year" wrapping="false"/></Column>
+                            <Column width="35rem"><Text text="Invoice No" wrapping="false"/></Column>
+                            <Column width="35rem"><Text text="Sold To Code" wrapping="false"/></Column>
+                            <Column width="35rem"><Text text="Sold To Name" wrapping="false"/></Column>
+                            <Column width="35rem"><Text text="Sale Type" wrapping="false"/></Column>
+                            <Column width="35rem"><Text text="Billing Doc Status" wrapping="false"/></Column>
+                            <Column width="35rem"><Text text="Sales District (Charge Area)" wrapping="false"/></Column>
+                            <Column width="35rem"><Text text="Acct Assmt Grp / Sales Group" wrapping="false"/></Column>
+                            <Column width="35rem"><Text text="Customer Type" wrapping="false"/></Column>
+                            <Column width="35rem"><Text text="Item" wrapping="false"/></Column>
+                            <Column width="35rem"><Text text="Profit Centre" wrapping="false"/></Column>
+                            <Column width="35rem"><Text text="Ship To Code" wrapping="false"/></Column>
+                            <Column width="35rem"><Text text="Ship To Name" wrapping="false"/></Column>
+                            <Column width="35rem"><Text text="GA of BGL" wrapping="false"/></Column>
+                            <Column width="35rem"><Text text="Material Code" wrapping="false"/></Column>
+                            <Column width="35rem"><Text text="Material Name" wrapping="false"/></Column>
+                            <Column width="35rem"><Text text="Billing Qty" wrapping="false"/></Column>
+                            <Column width="35rem"><Text text="Billing UOM" wrapping="false"/></Column>
 
                             <!-- ── Pricing / Yellow columns ──────────────────── -->
-                            <Column
-                                width="9rem"
-                                hAlign="End"
-                            >
-                                <Text text="Price to Update" />
-                            </Column>
-                            <Column
-                                width="9rem"
-                                hAlign="End"
-                            >
-                                <Text text="Trade Margin" />
-                            </Column>
-                            <Column
-                                width="9rem"
-                                hAlign="End"
-                            >
-                                <Text text="Discount Excl." />
-                            </Column>
-                            <Column
-                                width="9rem"
-                                hAlign="End"
-                            >
-                                <Text text="Excise Duty ST" />
-                            </Column>
-                            <Column
-                                width="10rem"
-                                hAlign="End"
-                            >
-                                <Text text="Taxable Value (Rs.)" />
-                            </Column>
-                            <Column
-                                width="9rem"
-                                hAlign="End"
-                            >
-                                <Text text="ED Recovery" />
-                            </Column>
-                            <Column
-                                width="9rem"
-                                hAlign="End"
-                            >
-                                <Text text="Excise Duty" />
-                            </Column>
-                            <Column
-                                width="11rem"
-                                hAlign="End"
-                            >
-                                <Text text="Net Taxable Value (Rs.)" />
-                            </Column>
-                            <Column
-                                width="7rem"
-                                hAlign="End"
-                            >
-                                <Text text="VAT Rate %" />
-                            </Column>
-                            <Column
-                                width="9rem"
-                                hAlign="End"
-                            >
-                                <Text text="VAT Tax (Rs.)" />
-                            </Column>
-                            <Column
-                                width="8rem"
-                                hAlign="End"
-                            >
-                                <Text text="IGST" />
-                            </Column>
-                            <Column
-                                width="6rem"
-                                hAlign="End"
-                            >
-                                <Text text="IGST %" />
-                            </Column>
-                            <Column
-                                width="8rem"
-                                hAlign="End"
-                            >
-                                <Text text="CGST" />
-                            </Column>
-                            <Column
-                                width="6rem"
-                                hAlign="End"
-                            >
-                                <Text text="CGST %" />
-                            </Column>
-                            <Column
-                                width="8rem"
-                                hAlign="End"
-                            >
-                                <Text text="SGST" />
-                            </Column>
-                            <Column
-                                width="6rem"
-                                hAlign="End"
-                            >
-                                <Text text="SGST %" />
-                            </Column>
-                            <Column
-                                width="8rem"
-                                hAlign="End"
-                            >
-                                <Text text="TCS" />
-                            </Column>
-                            <Column
-                                width="6rem"
-                                hAlign="End"
-                            >
-                                <Text text="TCS %" />
-                            </Column>
+                            <Column width="35rem"><Text text="Price to Update" wrapping="false"/></Column>
+                            <Column width="35rem"><Text text="Trade Margin" wrapping="false"/></Column>
+                            <Column width="35rem"><Text text="Discount Excl." wrapping="false"/></Column>
+                            <Column width="35rem"><Text text="Excise Duty ST" wrapping="false"/></Column>
+                            <Column width="35rem"><Text text="Taxable Value (Rs.)" wrapping="false"/></Column>
+                            <Column width="35rem"><Text text="ED Recovery" wrapping="false"/></Column>
+                            <Column width="35rem"><Text text="Excise Duty" wrapping="false"/></Column>
+                            <Column width="35rem"><Text text="Net Taxable Value (Rs.)" wrapping="false"/></Column>
+                            <Column width="35rem"><Text text="VAT Tax Rate %" wrapping="false"/></Column>
+                            <Column width="35rem"><Text text="VAT Tax (Rs.)" wrapping="false"/></Column>
+                            <Column width="35rem"><Text text="IGST" wrapping="false"/></Column>
+                            <Column width="35rem"><Text text="IGST %" wrapping="false"/></Column>
+                            <Column width="35rem"><Text text="CGST" wrapping="false"/></Column>
+                            <Column width="35rem"><Text text="CGST %" wrapping="false"/></Column>
+                            <Column width="35rem"><Text text="SGST" wrapping="false"/></Column>
+                            <Column width="35rem"><Text text="SGST %" wrapping="false"/></Column>
+                            <Column width="35rem"><Text text="TCS" wrapping="false"/></Column>
+                            <Column width="35rem"><Text text="TCS %" wrapping="false"/></Column>
 
                             <!-- ── Summary / Green columns ───────────────────── -->
-                            <Column
-                                width="11rem"
-                                hAlign="End"
-                            >
-                                <Text text="Invoice Value (Rs.)" />
-                            </Column>
-                            <Column width="8rem">
-                                <Text text="Class" />
-                            </Column>
-                            <Column width="10rem">
-                                <Text text="Dist. Channel" />
-                            </Column>
-                            <Column
-                                width="9rem"
-                                hAlign="End"
-                            >
-                                <Text text="Daily Auth Qty" />
-                            </Column>
-                            <Column width="6rem">
-                                <Text text="Auth UOM" />
-                            </Column>
+                            <Column width="35rem"><Text text="Invoice Value (Rs.)" wrapping="false"/></Column>
+                            <Column width="35rem"><Text text="Class" wrapping="false"/></Column>
+                            <Column width="35rem"><Text text="Distribution Channel" wrapping="false"/></Column>
+                            <Column width="35rem"><Text text="Daily Authorized Qty" wrapping="false"/></Column>
+                            <Column width="35rem"><Text text="Daily Authorized Qty (UOM)" wrapping="false"/></Column>
                         </columns>
 
                         <items>
@@ -316,101 +167,67 @@
                                     <!-- ── Core / Green columns ──────────────────────── -->
                                     <Text
                                         text="{path: 'TableDataModel>BillingDocumentDate', type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'dd/MM/yyyy'}}"
+                                        wrapping="false"
                                     />
-                                    <Text
-                                        text="{TableDataModel>InvoiceMonthName}"
-                                    />
-                                    <Text text="{TableDataModel>FiscalYear}" />
+                                    <Text text="{TableDataModel>InvoiceMonthName}"          wrapping="false"/>
+                                    <Text text="{TableDataModel>FiscalYear}"                wrapping="false"/>
                                     <Text
                                         text="{TableDataModel>BillingDocument}"
                                         class="{= ${TableDataModel>IsGrandTotal} ? 'sapUiStrongBold' : ''}"
+                                        wrapping="false"
                                     />
-                                    <Text text="{TableDataModel>SoldToParty}" />
-                                    <Text text="{TableDataModel>SoldToName}" />
-                                    <Text
-                                        text="{TableDataModel>BillingDocumentTypeText}"
-                                    />
-                                    <Text
-                                        text="{TableDataModel>OverallBillingStatus}"
-                                    />
-                                    <Text
-                                        text="{TableDataModel>SalesDistrictName}"
-                                    />
-                                    <!-- FIX: was SalesGroupName; should reflect CustomerAccountAssignmentGroup / SalesGroupName per backend -->
-                                    <Text
-                                        text="{TableDataModel>SalesGroupName}"
-                                    />
-                                    <!-- FIX: was CustomerGroupName (correct for CustomerClassification lookup) -->
-                                    <Text
-                                        text="{TableDataModel>CustomerGroupName}"
-                                    />
-                                    <Text
-                                        text="{TableDataModel>BillingDocumentItem}"
-                                    />
-                                    <Text
-                                        text="{TableDataModel>ProfitCenter}"
-                                    />
-                                    <Text text="{TableDataModel>ShipToParty}" />
-                                    <Text text="{TableDataModel>ShipToName}" />
-                                    <Text text="{TableDataModel>Plant}" />
-                                    <Text text="{TableDataModel>Material}" />
-                                    <Text
-                                        text="{TableDataModel>BillingDocumentItemText}"
-                                    />
-                                    <Text
-                                        text="{TableDataModel>BillingQuantity}"
-                                    />
-                                    <Text
-                                        text="{TableDataModel>BillingQuantityUnit}"
-                                    />
+                                    <Text text="{TableDataModel>SoldToParty}"               wrapping="false"/>
+                                    <Text text="{TableDataModel>SoldToName}"                wrapping="false"/>
+                                    <Text text="{TableDataModel>BillingDocumentTypeText}"   wrapping="false"/>
+                                    <Text text="{TableDataModel>OverallBillingStatus}"      wrapping="false"/>
+                                    <Text text="{TableDataModel>SalesDistrictName}"         wrapping="false"/>
+                                    <Text text="{TableDataModel>SalesGroupName}"            wrapping="false"/>
+                                    <Text text="{TableDataModel>CustomerGroupName}"         wrapping="false"/>
+                                    <Text text="{TableDataModel>BillingDocumentItem}"       wrapping="false"/>
+                                    <Text text="{TableDataModel>ProfitCenter}"              wrapping="false"/>
+                                    <Text text="{TableDataModel>ShipToParty}"               wrapping="false"/>
+                                    <Text text="{TableDataModel>ShipToName}"                wrapping="false"/>
+                                    <Text text="{TableDataModel>Plant}"                     wrapping="false"/>
+                                    <Text text="{TableDataModel>Material}"                  wrapping="false"/>
+                                    <Text text="{TableDataModel>BillingDocumentItemText}"   wrapping="false"/>
 
-                                    <!-- ── Pricing / Yellow columns ──────────────────── -->
-                                    <Text
-                                        text="{TableDataModel>PriceToUpdate}"
-                                    />
-                                    <Text text="{TableDataModel>TradeMargin}" />
-                                    <Text
-                                        text="{TableDataModel>DiscountExcl}"
-                                    />
-                                    <Text
-                                        text="{TableDataModel>ExciseDutySt}"
-                                    />
-                                    <Text
-                                        text="{TableDataModel>TaxableValue}"
-                                    />
-                                    <Text text="{TableDataModel>EdRecovery}" />
-                                    <Text text="{TableDataModel>ExciseDuty}" />
-                                    <Text
-                                        text="{TableDataModel>NetTaxableValue}"
-                                    />
-                                    <Text text="{TableDataModel>TaxRatePer}" />
-                                    <Text text="{TableDataModel>TaxVatRs}" />
-                                    <Text text="{TableDataModel>Igst}" />
-                                    <Text text="{TableDataModel>IgstPer}" />
-                                    <Text text="{TableDataModel>Cgst}" />
-                                    <Text text="{TableDataModel>CgstPer}" />
-                                    <Text text="{TableDataModel>Sgst}" />
-                                    <Text text="{TableDataModel>SgstPer}" />
-                                    <Text text="{TableDataModel>Tcs}" />
-                                    <Text text="{TableDataModel>TcsPer}" />
+                                    <!-- Billing Qty: 3 decimals -->
+                                    <Text text="{path: 'TableDataModel>BillingQuantity', type: 'sap.ui.model.type.Float', formatOptions: {minFractionDigits: 3, maxFractionDigits: 3, groupingEnabled: true}}" wrapping="false"/>
+                                    <Text text="{TableDataModel>BillingQuantityUnit}"       wrapping="false"/>
+
+                                    <!-- ── Pricing / Yellow columns — 2 decimal places ── -->
+                                    <Text text="{path: 'TableDataModel>PriceToUpdate',   type: 'sap.ui.model.type.Float', formatOptions: {minFractionDigits: 2, maxFractionDigits: 2, groupingEnabled: true}}"  wrapping="false"/>
+                                    <Text text="{path: 'TableDataModel>TradeMargin',     type: 'sap.ui.model.type.Float', formatOptions: {minFractionDigits: 2, maxFractionDigits: 2, groupingEnabled: true}}"  wrapping="false"/>
+                                    <Text text="{path: 'TableDataModel>DiscountExcl',    type: 'sap.ui.model.type.Float', formatOptions: {minFractionDigits: 2, maxFractionDigits: 2, groupingEnabled: true}}"  wrapping="false"/>
+                                    <Text text="{path: 'TableDataModel>ExciseDutySt',    type: 'sap.ui.model.type.Float', formatOptions: {minFractionDigits: 2, maxFractionDigits: 2, groupingEnabled: true}}"  wrapping="false"/>
+                                    <Text text="{path: 'TableDataModel>TaxableValue',    type: 'sap.ui.model.type.Float', formatOptions: {minFractionDigits: 2, maxFractionDigits: 2, groupingEnabled: true}}"  wrapping="false"/>
+                                    <Text text="{path: 'TableDataModel>EdRecovery',      type: 'sap.ui.model.type.Float', formatOptions: {minFractionDigits: 2, maxFractionDigits: 2, groupingEnabled: true}}"  wrapping="false"/>
+                                    <Text text="{path: 'TableDataModel>ExciseDuty',      type: 'sap.ui.model.type.Float', formatOptions: {minFractionDigits: 2, maxFractionDigits: 2, groupingEnabled: true}}"  wrapping="false"/>
+                                    <Text text="{path: 'TableDataModel>NetTaxableValue', type: 'sap.ui.model.type.Float', formatOptions: {minFractionDigits: 2, maxFractionDigits: 2, groupingEnabled: true}}"  wrapping="false"/>
+                                    <!-- % rate fields: 2 decimals, no thousand separator -->
+                                    <Text text="{path: 'TableDataModel>TaxRatePer',      type: 'sap.ui.model.type.Float', formatOptions: {minFractionDigits: 2, maxFractionDigits: 2, groupingEnabled: false}}" wrapping="false"/>
+                                    <Text text="{path: 'TableDataModel>TaxVatRs',        type: 'sap.ui.model.type.Float', formatOptions: {minFractionDigits: 2, maxFractionDigits: 2, groupingEnabled: true}}"  wrapping="false"/>
+                                    <Text text="{path: 'TableDataModel>Igst',            type: 'sap.ui.model.type.Float', formatOptions: {minFractionDigits: 2, maxFractionDigits: 2, groupingEnabled: true}}"  wrapping="false"/>
+                                    <Text text="{path: 'TableDataModel>IgstPer',         type: 'sap.ui.model.type.Float', formatOptions: {minFractionDigits: 2, maxFractionDigits: 2, groupingEnabled: false}}" wrapping="false"/>
+                                    <Text text="{path: 'TableDataModel>Cgst',            type: 'sap.ui.model.type.Float', formatOptions: {minFractionDigits: 2, maxFractionDigits: 2, groupingEnabled: true}}"  wrapping="false"/>
+                                    <Text text="{path: 'TableDataModel>CgstPer',         type: 'sap.ui.model.type.Float', formatOptions: {minFractionDigits: 2, maxFractionDigits: 2, groupingEnabled: false}}" wrapping="false"/>
+                                    <Text text="{path: 'TableDataModel>Sgst',            type: 'sap.ui.model.type.Float', formatOptions: {minFractionDigits: 2, maxFractionDigits: 2, groupingEnabled: true}}"  wrapping="false"/>
+                                    <Text text="{path: 'TableDataModel>SgstPer',         type: 'sap.ui.model.type.Float', formatOptions: {minFractionDigits: 2, maxFractionDigits: 2, groupingEnabled: false}}" wrapping="false"/>
+                                    <Text text="{path: 'TableDataModel>Tcs',             type: 'sap.ui.model.type.Float', formatOptions: {minFractionDigits: 2, maxFractionDigits: 2, groupingEnabled: true}}"  wrapping="false"/>
+                                    <Text text="{path: 'TableDataModel>TcsPer',          type: 'sap.ui.model.type.Float', formatOptions: {minFractionDigits: 2, maxFractionDigits: 2, groupingEnabled: false}}" wrapping="false"/>
 
                                     <!-- ── Summary / Green columns ───────────────────── -->
                                     <ObjectNumber
-                                        number="{TableDataModel>InvoiceValue}"
+                                        number="{path: 'TableDataModel>InvoiceValue', type: 'sap.ui.model.type.Float', formatOptions: {minFractionDigits: 2, maxFractionDigits: 2, groupingEnabled: true}}"
                                         unit="{TableDataModel>TransactionCurrency}"
                                         emphasized="true"
                                     />
-                                    <!-- FIX: was empty <Text text="" />; now bound to Class property -->
-                                    <Text text="{TableDataModel>Class}" />
-                                    <Text
-                                        text="{TableDataModel>SalesOrderDistributionChannel}"
-                                    />
-                                    <Text
-                                        text="{TableDataModel>DailyAuthQty}"
-                                    />
-                                    <Text
-                                        text="{TableDataModel>DailyAuthUnit}"
-                                    />
+                                    <!-- FIX: backend returns lowercase 'class' -->
+                                    <Text text="{TableDataModel>class}"                              wrapping="false"/>
+                                    <Text text="{TableDataModel>SalesOrderDistributionChannel}"      wrapping="false"/>
+                                    <!-- Daily Auth Qty: 3 decimals -->
+                                    <Text text="{path: 'TableDataModel>DailyAuthQty',   type: 'sap.ui.model.type.Float', formatOptions: {minFractionDigits: 3, maxFractionDigits: 3, groupingEnabled: true}}" wrapping="false"/>
+                                    <Text text="{TableDataModel>DailyAuthUnit}"                      wrapping="false"/>
                                 </cells>
                             </ColumnListItem>
                         </items>
