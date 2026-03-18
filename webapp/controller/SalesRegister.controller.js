@@ -25,6 +25,7 @@ sap.ui.define([
 
             var oDivModel = new JSONModel();
             this.getView().setModel(oDivModel, "DivisionModel");
+
             this._fetchDivisionData();
         },
 
@@ -116,47 +117,73 @@ sap.ui.define([
             // Navigate from Parameters entity to the actual result Set
             var sPath = sParamKey + "/Set";
 
-            oModel.read(sPath, {
-                success: function (oData) {
-                    sap.ui.core.BusyIndicator.hide();
+            // ── Paginated read with $skiptoken support ────────────────────
+            var aAllResults = [];
+            var that = this;
 
-                    var aResults = (oData && oData.results) ? oData.results : [];
+            function readPage(sSkipToken) {
+                var mParameters = {
+                    success: function (oData) {
+                        var aPage = (oData && oData.results) ? oData.results : [];
+                        aAllResults = aAllResults.concat(aPage);
 
-                    // ── No data handling ──────────────────────────────────────────
-                    if (aResults.length === 0) {
-                        this.getView().getModel("TableDataModel").setData({ results: [] });
-                        MessageBox.information(
-                            "No records found for the selected criteria.\n\n" +
-                            "From Date : " + this.byId("idFromDate").getValue() + "\n" +
-                            "To Date   : " + this.byId("idToDate").getValue()   + "\n" +
-                            "Division  : " + this.byId("idDivision").getValue(),
-                            { title: "No Data Found" }
-                        );
-                        return;
+                        if (oData.__next) {
+                            // More pages available — extract skiptoken and recurse
+                            var sNext = oData.__next.split("$skiptoken=")[1];
+                            var sNextToken = sNext ? decodeURIComponent(sNext) : null;
+                            if (sNextToken) {
+                                readPage(sNextToken);
+                                return;
+                            }
+                        }
+
+                        // ── All pages loaded — finalise ───────────────────────
+                        if (aAllResults.length === 0) {
+                            that.getView().getModel("TableDataModel").setData({ results: [] });
+                            sap.ui.core.BusyIndicator.hide();
+                            MessageBox.information(
+                                "No records found for the selected criteria.\n\n" +
+                                "From Date : " + that.byId("idFromDate").getValue() + "\n" +
+                                "To Date   : " + that.byId("idToDate").getValue()   + "\n" +
+                                "Division  : " + that.byId("idDivision").getValue(),
+                                { title: "No Data Found" }
+                            );
+                            return;
+                        }
+
+                        // ── Append Grand Total row ────────────────────────────
+                        var oTotal = that._computeGrandTotal(aAllResults);
+                        aAllResults.push(oTotal);
+
+                        // BusyIndicator hidden in onTableUpdateFinished after render
+                        that.getView().getModel("TableDataModel").setData({ results: aAllResults });
+                    },
+
+                    error: function (oError) {
+                        sap.ui.core.BusyIndicator.hide();
+                        that.getView().getModel("TableDataModel").setData({ results: [] });
+
+                        var sMsg = that._parseODataError(oError);
+                        MessageBox.error(sMsg, {
+                            title: "Error",
+                            details: oError.responseText || "",
+                            styleClass: that.getOwnerComponent().getContentDensityClass
+                                ? that.getOwnerComponent().getContentDensityClass()
+                                : ""
+                        });
                     }
+                };
 
-                    // ── Append Grand Total row ────────────────────────────────────
-                    var oTotal = this._computeGrandTotal(aResults);
-                    aResults.push(oTotal);
+                // Attach skiptoken only for pages 2, 3, ...
+                if (sSkipToken) {
+                    mParameters.urlParameters = { "$skiptoken": sSkipToken };
+                }
 
-                    this.getView().getModel("TableDataModel").setData({ results: aResults });
-                }.bind(this),
+                oModel.read(sPath, mParameters);
+            }
 
-                error: function (oError) {
-                    sap.ui.core.BusyIndicator.hide();
-                    // Clear table on error so stale data is not visible
-                    this.getView().getModel("TableDataModel").setData({ results: [] });
-
-                    var sMsg = this._parseODataError(oError);
-                    MessageBox.error(sMsg, {
-                        title: "Error",
-                        details: oError.responseText || "",
-                        styleClass: this.getOwnerComponent().getContentDensityClass
-                            ? this.getOwnerComponent().getContentDensityClass()
-                            : ""
-                    });
-                }.bind(this)
-            });
+            // First page — no skiptoken
+            readPage();
         },
 
         // ─── Grand Total Row Builder ──────────────────────────────────────────────
@@ -232,6 +259,23 @@ sap.ui.define([
             oTotal.TcsPer      = null;
 
             return oTotal;
+        },
+
+        // ─── Table updateFinished — hide busy indicator after render ─────────────
+        onTableUpdateFinished: function () {
+            sap.ui.core.BusyIndicator.hide();
+        },
+
+        // ─── Date formatter for first column ─────────────────────────────────────
+        // Shows "Grand Total" for the total row, formatted date for data rows
+        formatInvoiceDate: function (oDate, bIsGrandTotal) {
+            if (bIsGrandTotal) { return "Grand Total"; }
+            if (!oDate)        { return ""; }
+            var d = oDate instanceof Date ? oDate : new Date(oDate);
+            if (isNaN(d.getTime())) { return ""; }
+            return ("0" + d.getDate()).slice(-2) + "/" +
+                   ("0" + (d.getMonth() + 1)).slice(-2) + "/" +
+                   d.getFullYear();
         },
 
         // ─── Centralised OData Error Parser ──────────────────────────────────────

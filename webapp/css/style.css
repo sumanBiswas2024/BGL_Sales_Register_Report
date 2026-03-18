@@ -1,7 +1,11 @@
-/* ── Table cell — always single line ─────────────────────────── */
-.sapMListTblCell .sapMText,
-.sapMListTblCell .sapMObjectNumberText,
-.sapMListTblCell .sapMObjectNumberUnit {
+/* ── Grand Total row — green highlight + bold text ───────────── */
+.sapMLIBHighlight-Success .sapMText {
+    font-weight: bold !important;
+    color: #0f6e56 !important;
+}
+
+/* ── All table cells — force single line ─────────────────────── */
+.sapMListTblCell .sapMText {
     white-space: nowrap !important;
     overflow: hidden;
     text-overflow: ellipsis;
