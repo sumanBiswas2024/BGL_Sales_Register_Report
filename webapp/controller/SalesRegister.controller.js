@@ -20,12 +20,35 @@ sap.ui.define([
             this._oTable = this.byId("idSalesTable");
             this._oFilterBar = this.byId("filterbar");
 
+            this.oSmartVariantManagement = this.getView().byId("svm");
+            this.oExpandedLabel = this.getView().byId("expandedLabel");
+            this.oSnappedLabel = this.getView().byId("snappedLabel");
+
+            this._oFilterBar.registerFetchData(this.fetchData);
+            this._oFilterBar.registerApplyData(this.applyData);
+            this._oFilterBar.registerGetFiltersWithValues(this.getFiltersWithValues);
+
+            var oPersInfo = new PersonalizableInfo({
+                type: "filterBar",
+                keyName: "persistencyKey",
+                dataSource: "",
+                control: this._oFilterBar
+            });
+            this.oSmartVariantManagement.addPersonalizableControl(oPersInfo);
+            this.oSmartVariantManagement.initialise(function () { }, this._oFilterBar);
+
             var oTableDataModel = new JSONModel();
             this.getView().setModel(oTableDataModel, "TableDataModel");
 
             var oDivModel = new JSONModel();
             this.getView().setModel(oDivModel, "DivisionModel");
+
+            this._bAllPagesLoaded = false;
+            this._fetchDivisionData();
         },
+        fetchData: function () { return {}; },
+        applyData: function () { },
+        getFiltersWithValues: function () { return []; },
 
         // ─── Validation ───────────────────────────────────────────────────────────
         _validateInputFields: function () {
@@ -360,7 +383,7 @@ sap.ui.define([
                 }).then(function (oDialog) {
                     this._oDivDialog = oDialog;
                     oView.addDependent(this._oDivDialog);
-                    this._fetchDivisionData();
+                    // this._fetchDivisionData();
                     this._oDivDialog.open();
                 }.bind(this));
             } else {

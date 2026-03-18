@@ -5,6 +5,7 @@
     xmlns="sap.m"
     xmlns:f="sap.f"
     xmlns:fb="sap.ui.comp.filterbar"
+    xmlns:svm="sap.ui.comp.smartvariants"
 >
     <f:DynamicPage
         id="pageId"
@@ -13,8 +14,23 @@
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                    <!-- <Title text="Sales Register Report" /> -->
+                    <svm:SmartVariantManagement
+                        id="svm"
+                        showExecuteOnSelection="true"
+                    />
                 </f:heading>
+                <f:expandedContent>
+                    <Label
+                        id="expandedLabel"
+                        text="No filters active"
+                    />
+                </f:expandedContent>
+                <f:snappedContent>
+                    <Label
+                        id="snappedLabel"
+                        text="No filters active"
+                    />
+                </f:snappedContent>
             </f:DynamicPageTitle>
         </f:title>
 
@@ -24,7 +40,6 @@
                     <fb:FilterBar
                         id="filterbar"
                         persistencyKey="salesKey"
-                        useToolbar="false"
                         search=".onSearch"
                     >
                         <fb:filterGroupItems>
