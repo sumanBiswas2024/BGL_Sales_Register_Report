@@ -133,6 +133,7 @@ sap.ui.define([
         // },
 
         // ─── Search / OData Call ──────────────────────────────────────────────────
+
         onSearch: function () {
             if (!this._validateInputFields()) {
                 return;
@@ -465,6 +466,52 @@ sap.ui.define([
             var sQuery = oEvent.getParameter("value");
             var oFilter = new Filter("Division", FilterOperator.Contains, sQuery);
             oEvent.getSource().getBinding("items").filter(sQuery ? [oFilter] : []);
+        },
+
+        // ─── Sort Function ─────────────────────────────────────────────────────────
+        onSortButtonPressed: function () {
+            if (!this._oSortDialog) {
+                this._oSortDialog = Fragment.load({
+                    id: this.getView().getId(),
+                    name: "com.bgl.app.salesregister.Fragment.SortDialog",
+                    controller: this
+                }).then(function (oDialog) {
+                    this._oSortDialog = oDialog;
+                    oDialog.open();
+                }.bind(this));
+            } else {
+                this._oSortDialog.open();
+            }
+        },
+        onSortConfirm: function (oEvent) {
+            var oSortItem = oEvent.getParameter("sortItem");
+            var bDescending = oEvent.getParameter("sortDescending");
+
+            if (!oSortItem) { return; }
+
+            var sSortKey = oSortItem.getKey();
+
+            // Get current data, exclude grand total row, sort, re-append grand total
+            var aResults = this.getView().getModel("TableDataModel").getProperty("/results") || [];
+            var oGrandTotal = aResults.find(function (r) { return r.IsGrandTotal; });
+            var aData = aResults.filter(function (r) { return !r.IsGrandTotal; });
+
+            aData.sort(function (a, b) {
+                var vA = a[sSortKey] || "";
+                var vB = b[sSortKey] || "";
+                // Date fields — compare as Date objects
+                if (sSortKey === "BillingDocumentDate") {
+                    vA = vA ? new Date(vA).getTime() : 0;
+                    vB = vB ? new Date(vB).getTime() : 0;
+                }
+                if (vA < vB) { return bDescending ? 1 : -1; }
+                if (vA > vB) { return bDescending ? -1 : 1; }
+                return 0;
+            });
+
+            if (oGrandTotal) { aData.push(oGrandTotal); }
+
+            this.getView().getModel("TableDataModel").setProperty("/results", aData);
         },
 
         // ─── Excel Export ─────────────────────────────────────────────────────────

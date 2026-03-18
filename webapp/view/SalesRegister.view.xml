@@ -107,6 +107,12 @@
                     />
                     <ToolbarSpacer />
                     <Button
+                        icon="sap-icon://sort"
+                        tooltip="Sort"
+                        press=".onSortButtonPressed"
+                        visible="false"
+                    />
+                    <Button
                         icon="sap-icon://excel-attachment"
                         press="onExport"
                         tooltip="Export to Excel"

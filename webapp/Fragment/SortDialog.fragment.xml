@@ -1,0 +1,11 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+    <ViewSettingsDialog
+        confirm=".onSortConfirm">
+        <sortItems>
+            <ViewSettingsItem text="Invoice Date"   key="BillingDocumentDate" selected="true"/>
+            <ViewSettingsItem text="Invoice Number" key="BillingDocument"/>
+        </sortItems>
+    </ViewSettingsDialog>
+</core:FragmentDefinition>
