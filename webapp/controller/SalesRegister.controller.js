@@ -130,14 +130,24 @@ sap.ui.define([
              * encoding — manual string concatenation caused the "Invalid URI segment" error.
              * ─────────────────────────────────────────────────────────────────────
              */
+            // Use UTC midnight to avoid timezone shift (IST = UTC+5:30 subtracts date by 1)
+            var aParts = sFrom.split("-");
+            var aToParts = sTo.split("-");
+
             var sParamKey = oModel.createKey("/ZI_SALEREG_BASE", {
-                p_from_date: new Date(sFrom + "T00:00:00"),
-                p_to_date: new Date(sTo + "T00:00:00"),
+                p_from_date: new Date(Date.UTC(
+                    parseInt(aParts[0]), parseInt(aParts[1]) - 1, parseInt(aParts[2])
+                )),
+                p_to_date: new Date(Date.UTC(
+                    parseInt(aToParts[0]), parseInt(aToParts[1]) - 1, parseInt(aToParts[2])
+                )),
                 p_division: sDiv
             });
 
             // Navigate from Parameters entity to the actual result Set
             var sPath = sParamKey + "/Set";
+
+            console.log(sPath);
 
             // ── Paginated read with $skiptoken support ────────────────────
             var aAllResults = [];
@@ -405,6 +415,12 @@ sap.ui.define([
             if (oSelectedItem) {
                 this.byId("idDivision").setValue(oSelectedItem.getTitle());
             }
+        },
+
+        onDivisionSearch: function (oEvent) {
+            var sQuery = oEvent.getParameter("value");
+            var oFilter = new Filter("Division", FilterOperator.Contains, sQuery);
+            oEvent.getSource().getBinding("items").filter(sQuery ? [oFilter] : []);
         },
 
         // ─── Excel Export ─────────────────────────────────────────────────────────
