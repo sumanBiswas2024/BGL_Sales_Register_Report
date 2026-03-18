@@ -25,17 +25,15 @@ sap.ui.define([
 
             var oDivModel = new JSONModel();
             this.getView().setModel(oDivModel, "DivisionModel");
-
-            this._fetchDivisionData();
         },
 
         // ─── Validation ───────────────────────────────────────────────────────────
         _validateInputFields: function () {
-            var oFromDate  = this.byId("idFromDate");
-            var oToDate    = this.byId("idToDate");
-            var oDivision  = this.byId("idDivision");
-            var isValid    = true;
-            var aMessages  = [];
+            var oFromDate = this.byId("idFromDate");
+            var oToDate = this.byId("idToDate");
+            var oDivision = this.byId("idDivision");
+            var isValid = true;
+            var aMessages = [];
 
             if (!oFromDate.getValue()) {
                 oFromDate.setValueState(sap.ui.core.ValueState.Error);
@@ -74,9 +72,9 @@ sap.ui.define([
             }
 
             var oModel = this.getOwnerComponent().getModel(); // mainService
-            var sFrom  = this.byId("idFromDate").getValue();  // yyyy-MM-dd
-            var sTo    = this.byId("idToDate").getValue();
-            var sDiv   = this.byId("idDivision").getValue();
+            var sFrom = this.byId("idFromDate").getValue();  // yyyy-MM-dd
+            var sTo = this.byId("idToDate").getValue();
+            var sDiv = this.byId("idDivision").getValue();
 
             /*
              * FIX: "Invalid URI segment"
@@ -94,6 +92,7 @@ sap.ui.define([
             sap.ui.core.BusyIndicator.show(0);
 
             // Clear previous results before every new search
+            this._bAllPagesLoaded = false;
             this.getView().getModel("TableDataModel").setData({ results: [] });
 
             /*
@@ -109,9 +108,9 @@ sap.ui.define([
              * ─────────────────────────────────────────────────────────────────────
              */
             var sParamKey = oModel.createKey("/ZI_SALEREG_BASE", {
-                p_from_date : new Date(sFrom + "T00:00:00"),
-                p_to_date   : new Date(sTo   + "T00:00:00"),
-                p_division  : sDiv
+                p_from_date: new Date(sFrom + "T00:00:00"),
+                p_to_date: new Date(sTo + "T00:00:00"),
+                p_division: sDiv
             });
 
             // Navigate from Parameters entity to the actual result Set
@@ -139,23 +138,25 @@ sap.ui.define([
 
                         // ── All pages loaded — finalise ───────────────────────
                         if (aAllResults.length === 0) {
+                            that._bAllPagesLoaded = false;
                             that.getView().getModel("TableDataModel").setData({ results: [] });
                             sap.ui.core.BusyIndicator.hide();
                             MessageBox.information(
                                 "No records found for the selected criteria.\n\n" +
                                 "From Date : " + that.byId("idFromDate").getValue() + "\n" +
-                                "To Date   : " + that.byId("idToDate").getValue()   + "\n" +
+                                "To Date   : " + that.byId("idToDate").getValue() + "\n" +
                                 "Division  : " + that.byId("idDivision").getValue(),
                                 { title: "No Data Found" }
                             );
                             return;
                         }
 
-                        // ── Append Grand Total row ────────────────────────────
+                        // ── Append Grand Total as last row in TableDataModel ──
                         var oTotal = that._computeGrandTotal(aAllResults);
                         aAllResults.push(oTotal);
 
-                        // BusyIndicator hidden in onTableUpdateFinished after render
+                        // Signal all pages loaded — onTableUpdateFinished will hide busy
+                        that._bAllPagesLoaded = true;
                         that.getView().getModel("TableDataModel").setData({ results: aAllResults });
                     },
 
@@ -197,9 +198,9 @@ sap.ui.define([
             var aSumFields = [
                 "BillingQuantity",
                 "PriceToUpdate", "TradeMargin", "DiscountExcl", "ExciseDutySt",
-                "TaxableValue",  "EdRecovery",  "ExciseDuty",  "NetTaxableValue",
+                "TaxableValue", "EdRecovery", "ExciseDuty", "NetTaxableValue",
                 "TaxVatRs",
-                "Igst",  "Cgst",  "Sgst",  "Tcs",
+                "Igst", "Cgst", "Sgst", "Tcs",
                 "TaxAmount", "InvoiceValue",
                 "DailyAuthQty"
             ];
@@ -216,66 +217,69 @@ sap.ui.define([
                 });
             });
 
-            // Round all totals to 2 decimal places (3 for quantity fields)
+            // Round totals and keep as numbers (Float type binding needs numbers, not strings)
             var aQtyFields = ["BillingQuantity", "DailyAuthQty"];
             aSumFields.forEach(function (sField) {
                 var iDecimals = aQtyFields.indexOf(sField) !== -1 ? 3 : 2;
-                oTotal[sField] = oTotal[sField].toFixed(iDecimals);
+                oTotal[sField] = parseFloat(oTotal[sField].toFixed(iDecimals));
             });
 
             // ── Text/label fields ─────────────────────────────────────────────
-            oTotal.BillingDocumentDate       = null;
-            oTotal.InvoiceMonthName          = "";
-            oTotal.FiscalYear                = "";
-            oTotal.BillingDocument           = "Grand Total";
-            oTotal.BillingDocumentItem       = "";
-            oTotal.BillingDocumentTypeText   = "";
-            oTotal.OverallBillingStatus      = "";
-            oTotal.SalesDistrictName         = "";
-            oTotal.SalesGroupName            = "";
-            oTotal.CustomerGroupName         = "";
-            oTotal.ProfitCenter              = "";
-            oTotal.SoldToParty               = "";   // FIX: was missing
-            oTotal.SoldToName                = "";   // FIX: was missing
-            oTotal.ShipToParty               = "";
-            oTotal.ShipToName                = "";
-            oTotal.Plant                     = "";
-            oTotal.Material                  = "";
-            oTotal.BillingDocumentItemText   = "";
-            oTotal.BillingQuantityUnit       = "";
+            oTotal.BillingDocumentDate = null;
+            oTotal.InvoiceMonthName = "";
+            oTotal.FiscalYear = "";
+            oTotal.BillingDocument = "";
+            oTotal.BillingDocumentItem = "";
+            oTotal.BillingDocumentTypeText = "";
+            oTotal.OverallBillingStatus = "";
+            oTotal.SalesDistrictName = "";
+            oTotal.SalesGroupName = "";
+            oTotal.CustomerGroupName = "";
+            oTotal.ProfitCenter = "";
+            oTotal.SoldToParty = "";   // FIX: was missing
+            oTotal.SoldToName = "";   // FIX: was missing
+            oTotal.ShipToParty = "";
+            oTotal.ShipToName = "";
+            oTotal.Plant = "";
+            oTotal.Material = "";
+            oTotal.BillingDocumentItemText = "";
+            oTotal.BillingQuantityUnit = "";
             oTotal.SalesOrderDistributionChannel = "";
-            oTotal.DailyAuthUnit             = "";
-            oTotal["class"]                  = "";
-            oTotal.TransactionCurrency       = "";
+            oTotal.DailyAuthUnit = "";
+            oTotal["class"] = "";
+            oTotal.TransactionCurrency = "";
 
             // ── FIX: Float-bound % fields must be null, NOT ""  ──────────────
             // sap.ui.model.type.Float throws FormatException on empty string
             // which can prevent the grand total row from rendering.
             // null is handled gracefully — the cell just shows blank.
-            oTotal.TaxRatePer  = null;
-            oTotal.IgstPer     = null;
-            oTotal.CgstPer     = null;
-            oTotal.SgstPer     = null;
-            oTotal.TcsPer      = null;
+            oTotal.TaxRatePer = null;
+            oTotal.IgstPer = null;
+            oTotal.CgstPer = null;
+            oTotal.SgstPer = null;
+            oTotal.TcsPer = null;
 
             return oTotal;
         },
 
-        // ─── Table updateFinished — hide busy indicator after render ─────────────
+        // ─── Table updateFinished — hide busy only after all pages are loaded ──────
         onTableUpdateFinished: function () {
-            sap.ui.core.BusyIndicator.hide();
+            if (this._bAllPagesLoaded) {
+                this._bAllPagesLoaded = false;
+                sap.ui.core.BusyIndicator.hide();
+            }
         },
 
         // ─── Date formatter for first column ─────────────────────────────────────
         // Shows "Grand Total" for the total row, formatted date for data rows
         formatInvoiceDate: function (oDate, bIsGrandTotal) {
             if (bIsGrandTotal) { return "Grand Total"; }
-            if (!oDate)        { return ""; }
+            if (!oDate) { return ""; }
             var d = oDate instanceof Date ? oDate : new Date(oDate);
             if (isNaN(d.getTime())) { return ""; }
             return ("0" + d.getDate()).slice(-2) + "/" +
-                   ("0" + (d.getMonth() + 1)).slice(-2) + "/" +
-                   d.getFullYear();
+                ("0" + (d.getMonth() + 1)).slice(-2) + "/" +
+                d.getFullYear();
         },
 
         // ─── Centralised OData Error Parser ──────────────────────────────────────
@@ -317,8 +321,8 @@ sap.ui.define([
 
                 // 3. XML error body  <message>...</message>
                 try {
-                    var oParser  = new DOMParser();
-                    var oXmlDoc  = oParser.parseFromString(sRaw, "application/xml");
+                    var oParser = new DOMParser();
+                    var oXmlDoc = oParser.parseFromString(sRaw, "application/xml");
                     var oMsgNode = oXmlDoc.querySelector("message");
                     if (oMsgNode && oMsgNode.textContent) {
                         return oMsgNode.textContent;
@@ -356,7 +360,7 @@ sap.ui.define([
                 }).then(function (oDialog) {
                     this._oDivDialog = oDialog;
                     oView.addDependent(this._oDivDialog);
-                    // this._fetchDivisionData();
+                    this._fetchDivisionData();
                     this._oDivDialog.open();
                 }.bind(this));
             } else {
@@ -382,9 +386,43 @@ sap.ui.define([
 
         // ─── Excel Export ─────────────────────────────────────────────────────────
         onExport: function () {
+            var aAllRows = this.getView().getModel("TableDataModel").getProperty("/results") || [];
+
+            // // Build export array — for grand total row put label in BillingDocumentDate (col 1)
+            // var aExportRows = aAllRows.map(function (oRow) {
+            //     var oExport = Object.assign({}, oRow);
+            //     if (oExport.IsGrandTotal) {
+            //         oExport.BillingDocumentDate = "Grand Total";  // leftmost column
+            //         oExport.BillingDocument = "";                 // clear Invoice No
+            //     }
+            //     return oExport;
+            // });
+
+            var aNumericFields = [
+                "BillingQuantity", "PriceToUpdate", "TradeMargin", "DiscountExcl", "ExciseDutySt",
+                "TaxableValue", "EdRecovery", "ExciseDuty", "NetTaxableValue", "TaxRatePer",
+                "TaxVatRs", "Igst", "IgstPer", "Cgst", "CgstPer", "Sgst", "SgstPer",
+                "Tcs", "TcsPer", "InvoiceValue", "DailyAuthQty"
+            ];
+
+            var aExportRows = aAllRows.map(function (oRow) {
+                var oExport = Object.assign({}, oRow);
+                if (oExport.IsGrandTotal) {
+                    oExport.BillingDocumentDate = "Grand Total";
+                    oExport.BillingDocument = "";
+                }
+                // Convert string decimals to numbers so Excel scale formatting works correctly
+                aNumericFields.forEach(function (sField) {
+                    if (oExport[sField] !== null && oExport[sField] !== undefined) {
+                        oExport[sField] = parseFloat(oExport[sField]) || 0;
+                    }
+                });
+                return oExport;
+            });
+
             var oSettings = {
                 workbook: { columns: this._createColumnConfig() },
-                dataSource: this.byId("idSalesTable").getBinding("items"),
+                dataSource: aExportRows,
                 fileName: "Sales_Register_Report.xlsx",
                 worker: false
             };
@@ -396,53 +434,53 @@ sap.ui.define([
         _createColumnConfig: function () {
             return [
                 // ── Core / Green columns ──────────────────────────────────────────
-                { label: "Invoice Date",                   property: "BillingDocumentDate",               type: EdmType.Date },
-                { label: "Invoice Month",                  property: "InvoiceMonthName",                  type: EdmType.String },
-                { label: "Fiscal Year",                    property: "FiscalYear",                        type: EdmType.String },
-                { label: "Invoice No",                     property: "BillingDocument",                   type: EdmType.String },
-                { label: "Sold To Code",                   property: "SoldToParty",                       type: EdmType.String },
-                { label: "Sold To Name",                   property: "SoldToName",                        type: EdmType.String },
-                { label: "Sale Type",                      property: "BillingDocumentTypeText",           type: EdmType.String },
-                { label: "Billing Document Status",        property: "OverallBillingStatus",              type: EdmType.String },
-                { label: "Sales District (Charge Area)",   property: "SalesDistrictName",                 type: EdmType.String },
-                { label: "Acct Assmt Grp Cust./Sales Grp", property: "SalesGroupName",                   type: EdmType.String },
-                { label: "Customer Type",                  property: "CustomerGroupName",                 type: EdmType.String },
-                { label: "Item",                           property: "BillingDocumentItem",               type: EdmType.String },
-                { label: "Profit Centre",                  property: "ProfitCenter",                      type: EdmType.String },
-                { label: "Ship To Code",                   property: "ShipToParty",                       type: EdmType.String },
-                { label: "Ship To Name",                   property: "ShipToName",                        type: EdmType.String },
-                { label: "GA of BGL",                      property: "Plant",                             type: EdmType.String },
-                { label: "Material Code",                  property: "Material",                          type: EdmType.String },
-                { label: "Material Name",                  property: "BillingDocumentItemText",           type: EdmType.String },
-                { label: "Billing Quantity",               property: "BillingQuantity",                   type: EdmType.Decimal, scale: 3 },
-                { label: "Billing UOM",                    property: "BillingQuantityUnit",               type: EdmType.String },
+                { label: "Invoice Date", property: "BillingDocumentDate", type: EdmType.String },
+                { label: "Invoice Month", property: "InvoiceMonthName", type: EdmType.String },
+                { label: "Fiscal Year", property: "FiscalYear", type: EdmType.String },
+                { label: "Invoice No", property: "BillingDocument", type: EdmType.String },
+                { label: "Sold To Code", property: "SoldToParty", type: EdmType.String },
+                { label: "Sold To Name", property: "SoldToName", type: EdmType.String },
+                { label: "Sale Type", property: "BillingDocumentTypeText", type: EdmType.String },
+                { label: "Billing Document Status", property: "OverallBillingStatus", type: EdmType.String },
+                { label: "Sales District (Charge Area)", property: "SalesDistrictName", type: EdmType.String },
+                { label: "Acct Assmt Grp Cust./Sales Grp", property: "SalesGroupName", type: EdmType.String },
+                { label: "Customer Type", property: "CustomerGroupName", type: EdmType.String },
+                { label: "Item", property: "BillingDocumentItem", type: EdmType.String },
+                { label: "Profit Centre", property: "ProfitCenter", type: EdmType.String },
+                { label: "Ship To Code", property: "ShipToParty", type: EdmType.String },
+                { label: "Ship To Name", property: "ShipToName", type: EdmType.String },
+                { label: "GA of BGL", property: "Plant", type: EdmType.String },
+                { label: "Material Code", property: "Material", type: EdmType.String },
+                { label: "Material Name", property: "BillingDocumentItemText", type: EdmType.String },
+                { label: "Billing Quantity", property: "BillingQuantity", type: EdmType.Decimal, scale: 3 },
+                { label: "Billing UOM", property: "BillingQuantityUnit", type: EdmType.String },
 
                 // ── Pricing / Yellow columns ──────────────────────────────────────
-                { label: "Price to Update",                property: "PriceToUpdate",                     type: EdmType.Decimal, scale: 2 },
-                { label: "Trade Margin",                   property: "TradeMargin",                       type: EdmType.Decimal, scale: 2 },
-                { label: "Discount Excluding",             property: "DiscountExcl",                      type: EdmType.Decimal, scale: 2 },
-                { label: "Excise Duty ST",                 property: "ExciseDutySt",                      type: EdmType.Decimal, scale: 2 },
-                { label: "Taxable Value (Rs.)",            property: "TaxableValue",                      type: EdmType.Decimal, scale: 2 },
-                { label: "ED Recovery",                    property: "EdRecovery",                        type: EdmType.Decimal, scale: 2 },
-                { label: "Excise Duty",                    property: "ExciseDuty",                        type: EdmType.Decimal, scale: 2 },
-                { label: "Net Taxable Value (Rs.)",        property: "NetTaxableValue",                   type: EdmType.Decimal, scale: 2 },
-                { label: "Tax Rate % (VAT)",               property: "TaxRatePer",                        type: EdmType.Decimal, scale: 2 },
-                { label: "Tax (Rs.) - VAT",                property: "TaxVatRs",                          type: EdmType.Decimal, scale: 2 },
-                { label: "IGST",                           property: "Igst",                              type: EdmType.Decimal, scale: 2 },
-                { label: "IGST %",                         property: "IgstPer",                           type: EdmType.Decimal, scale: 2 },
-                { label: "CGST",                           property: "Cgst",                              type: EdmType.Decimal, scale: 2 },
-                { label: "CGST %",                         property: "CgstPer",                           type: EdmType.Decimal, scale: 2 },
-                { label: "SGST",                           property: "Sgst",                              type: EdmType.Decimal, scale: 2 },
-                { label: "SGST %",                         property: "SgstPer",                           type: EdmType.Decimal, scale: 2 },
-                { label: "TCS",                            property: "Tcs",                               type: EdmType.Decimal, scale: 2 },
-                { label: "TCS %",                          property: "TcsPer",                            type: EdmType.Decimal, scale: 2 },
+                { label: "Price to Update", property: "PriceToUpdate", type: EdmType.Decimal, scale: 2 },
+                { label: "Trade Margin", property: "TradeMargin", type: EdmType.Decimal, scale: 2 },
+                { label: "Discount Excluding", property: "DiscountExcl", type: EdmType.Decimal, scale: 2 },
+                { label: "Excise Duty ST", property: "ExciseDutySt", type: EdmType.Decimal, scale: 2 },
+                { label: "Taxable Value (Rs.)", property: "TaxableValue", type: EdmType.Decimal, scale: 2 },
+                { label: "ED Recovery", property: "EdRecovery", type: EdmType.Decimal, scale: 2 },
+                { label: "Excise Duty", property: "ExciseDuty", type: EdmType.Decimal, scale: 2 },
+                { label: "Net Taxable Value (Rs.)", property: "NetTaxableValue", type: EdmType.Decimal, scale: 2 },
+                { label: "Tax Rate % (VAT)", property: "TaxRatePer", type: EdmType.Decimal, scale: 2 },
+                { label: "Tax (Rs.) - VAT", property: "TaxVatRs", type: EdmType.Decimal, scale: 2 },
+                { label: "IGST", property: "Igst", type: EdmType.Decimal, scale: 2 },
+                { label: "IGST %", property: "IgstPer", type: EdmType.Decimal, scale: 2 },
+                { label: "CGST", property: "Cgst", type: EdmType.Decimal, scale: 2 },
+                { label: "CGST %", property: "CgstPer", type: EdmType.Decimal, scale: 2 },
+                { label: "SGST", property: "Sgst", type: EdmType.Decimal, scale: 2 },
+                { label: "SGST %", property: "SgstPer", type: EdmType.Decimal, scale: 2 },
+                { label: "TCS", property: "Tcs", type: EdmType.Decimal, scale: 2 },
+                { label: "TCS %", property: "TcsPer", type: EdmType.Decimal, scale: 2 },
 
                 // ── Summary / Green columns ───────────────────────────────────────
-                { label: "Invoice Value (Rs.)",            property: "InvoiceValue",                      type: EdmType.Decimal, scale: 2 },
-                { label: "Class",                          property: "class",                             type: EdmType.String },
-                { label: "Distribution Channel",           property: "SalesOrderDistributionChannel",     type: EdmType.String },
-                { label: "Daily Authorized Quantity",      property: "DailyAuthQty",                      type: EdmType.Decimal, scale: 3 },
-                { label: "Daily Authorized Quantity (UOM)",property: "DailyAuthUnit",                     type: EdmType.String }
+                { label: "Invoice Value (Rs.)", property: "InvoiceValue", type: EdmType.Decimal, scale: 2 },
+                { label: "Class", property: "class", type: EdmType.String },
+                { label: "Distribution Channel", property: "SalesOrderDistributionChannel", type: EdmType.String },
+                { label: "Daily Authorized Quantity", property: "DailyAuthQty", type: EdmType.Decimal, scale: 3 },
+                { label: "Daily Authorized Quantity (UOM)", property: "DailyAuthUnit", type: EdmType.String }
             ];
         }
     });

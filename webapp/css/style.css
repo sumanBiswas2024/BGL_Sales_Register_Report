@@ -1,11 +1,7 @@
-/* ── Grand Total row — green highlight + bold text ───────────── */
-.sapMLIBHighlight-Success .sapMText {
-    font-weight: bold !important;
-    color: #0f6e56 !important;
-}
-
-/* ── All table cells — force single line ─────────────────────── */
-.sapMListTblCell .sapMText {
+/* ── Table cell — always single line ─────────────────────────── */
+.sapMListTblCell .sapMText,
+.sapMListTblCell .sapMObjectNumberText,
+.sapMListTblCell .sapMObjectNumberUnit {
     white-space: nowrap !important;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -24,4 +20,14 @@
     top: 0;
     z-index: 2;
     background: #fff;
+}
+
+/* ── Grand Total row — light green highlight ─────────────────── */
+.sapMLIBHighlight-Success .sapMText {
+    font-weight: bold !important;
+    color: #1a6b3c !important;
+}
+
+.sapMLIBHighlight-Success {
+    background-color: #e8f5e9 !important;
 }

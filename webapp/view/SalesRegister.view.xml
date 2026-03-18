@@ -45,7 +45,8 @@
         <f:content>
             <VBox>
                 <OverflowToolbar>
-                    <Title text="Items ({= ${TableDataModel>/results}.length || 0})"/>
+                    <!-- Show data row count only (exclude grand total row) -->
+                    <Title text="{= ${TableDataModel>/results}.length > 0 ? 'Items (' + (${TableDataModel>/results}.length - 1) + ')' : 'Items (0)'}"/>
                     <ToolbarSpacer/>
                     <Button icon="sap-icon://excel-attachment" press="onExport" tooltip="Export to Excel"/>
                 </OverflowToolbar>
@@ -57,6 +58,9 @@
                         sticky="ColumnHeaders"
                         fixedLayout="false"
                         class="tableWrapper"
+                        growing="true"
+                        growingThreshold="500"
+                        growingScrollToLoad="false"
                         updateFinished=".onTableUpdateFinished"
                     >
                         <columns>
@@ -111,7 +115,7 @@
                                 type="Inactive"
                             >
                                 <cells>
-                                    <!-- Col 1: Invoice Date — shows 'Grand Total' label for total row, formatted date for data rows -->
+                                    <!-- Col 1: date for data rows, "Grand Total" label for total row -->
                                     <Text text="{parts: [{path: 'TableDataModel>BillingDocumentDate'}, {path: 'TableDataModel>IsGrandTotal'}], formatter: '.formatInvoiceDate'}" wrapping="false"/>
                                     <Text text="{TableDataModel>InvoiceMonthName}"          wrapping="false"/>
                                     <Text text="{TableDataModel>FiscalYear}"                wrapping="false"/>
