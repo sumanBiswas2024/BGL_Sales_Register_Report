@@ -25,6 +25,7 @@ sap.ui.define([
 
             var oDivModel = new JSONModel();
             this.getView().setModel(oDivModel, "DivisionModel");
+            this._fetchDivisionData();
         },
 
         // ─── Validation ───────────────────────────────────────────────────────────
@@ -180,8 +181,9 @@ sap.ui.define([
             var oTotal = { IsGrandTotal: true };
             aSumFields.forEach(function (sField) { oTotal[sField] = 0; });
 
-            // Accumulate — parseFloat handles string decimals from OData response
+            // Accumulate — skip any existing grand total row, parseFloat handles string decimals
             aRows.forEach(function (oRow) {
+                if (oRow.IsGrandTotal) { return; }  // skip previous grand total on re-search
                 aSumFields.forEach(function (sField) {
                     oTotal[sField] += parseFloat(oRow[sField]) || 0;
                 });
@@ -194,34 +196,40 @@ sap.ui.define([
                 oTotal[sField] = oTotal[sField].toFixed(iDecimals);
             });
 
-            // Label fields — show "Grand Total" in the first column, blank the rest
-            oTotal.BillingDocumentDate   = null;
-            oTotal.InvoiceMonthName      = "";
-            oTotal.FiscalYear            = "";
-            oTotal.BillingDocument       = "Grand Total";
-            oTotal.BillingDocumentItem   = "";
-            oTotal.BillingDocumentTypeText = "";
-            oTotal.OverallBillingStatus  = "";
-            oTotal.SalesDistrictName     = "";
-            oTotal.SalesGroupName        = "";
-            oTotal.CustomerGroupName     = "";
-            oTotal.ProfitCenter          = "";
-            oTotal.ShipToParty           = "";
-            oTotal.ShipToName            = "";
-            oTotal.Plant                 = "";
-            oTotal.Material              = "";
-            oTotal.BillingDocumentItemText = "";
-            oTotal.BillingQuantityUnit   = "";
+            // ── Text/label fields ─────────────────────────────────────────────
+            oTotal.BillingDocumentDate       = null;
+            oTotal.InvoiceMonthName          = "";
+            oTotal.FiscalYear                = "";
+            oTotal.BillingDocument           = "Grand Total";
+            oTotal.BillingDocumentItem       = "";
+            oTotal.BillingDocumentTypeText   = "";
+            oTotal.OverallBillingStatus      = "";
+            oTotal.SalesDistrictName         = "";
+            oTotal.SalesGroupName            = "";
+            oTotal.CustomerGroupName         = "";
+            oTotal.ProfitCenter              = "";
+            oTotal.SoldToParty               = "";   // FIX: was missing
+            oTotal.SoldToName                = "";   // FIX: was missing
+            oTotal.ShipToParty               = "";
+            oTotal.ShipToName                = "";
+            oTotal.Plant                     = "";
+            oTotal.Material                  = "";
+            oTotal.BillingDocumentItemText   = "";
+            oTotal.BillingQuantityUnit       = "";
             oTotal.SalesOrderDistributionChannel = "";
-            oTotal.DailyAuthUnit         = "";
-            // Percentage fields — blank
-            oTotal.TaxRatePer  = "";
-            oTotal.IgstPer     = "";
-            oTotal.CgstPer     = "";
-            oTotal.SgstPer     = "";
-            oTotal.TcsPer      = "";
-            oTotal.TransactionCurrency = "";
-            oTotal["class"] = "";  // backend returns lowercase 'class'
+            oTotal.DailyAuthUnit             = "";
+            oTotal["class"]                  = "";
+            oTotal.TransactionCurrency       = "";
+
+            // ── FIX: Float-bound % fields must be null, NOT ""  ──────────────
+            // sap.ui.model.type.Float throws FormatException on empty string
+            // which can prevent the grand total row from rendering.
+            // null is handled gracefully — the cell just shows blank.
+            oTotal.TaxRatePer  = null;
+            oTotal.IgstPer     = null;
+            oTotal.CgstPer     = null;
+            oTotal.SgstPer     = null;
+            oTotal.TcsPer      = null;
 
             return oTotal;
         },
@@ -304,7 +312,7 @@ sap.ui.define([
                 }).then(function (oDialog) {
                     this._oDivDialog = oDialog;
                     oView.addDependent(this._oDivDialog);
-                    this._fetchDivisionData();
+                    // this._fetchDivisionData();
                     this._oDivDialog.open();
                 }.bind(this));
             } else {

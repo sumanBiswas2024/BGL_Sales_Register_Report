@@ -159,10 +159,7 @@
                         </columns>
 
                         <items>
-                            <ColumnListItem
-                                highlight="{= ${TableDataModel>IsGrandTotal} ? 'Success' : 'None'}"
-                                type="Inactive"
-                            >
+                            <ColumnListItem type="Inactive">
                                 <cells>
                                     <!-- ── Core / Green columns ──────────────────────── -->
                                     <Text
@@ -171,11 +168,7 @@
                                     />
                                     <Text text="{TableDataModel>InvoiceMonthName}"          wrapping="false"/>
                                     <Text text="{TableDataModel>FiscalYear}"                wrapping="false"/>
-                                    <Text
-                                        text="{TableDataModel>BillingDocument}"
-                                        class="{= ${TableDataModel>IsGrandTotal} ? 'sapUiStrongBold' : ''}"
-                                        wrapping="false"
-                                    />
+                                    <Text text="{TableDataModel>BillingDocument}"           wrapping="false"/>
                                     <Text text="{TableDataModel>SoldToParty}"               wrapping="false"/>
                                     <Text text="{TableDataModel>SoldToName}"                wrapping="false"/>
                                     <Text text="{TableDataModel>BillingDocumentTypeText}"   wrapping="false"/>
@@ -217,11 +210,12 @@
                                     <Text text="{path: 'TableDataModel>TcsPer',          type: 'sap.ui.model.type.Float', formatOptions: {minFractionDigits: 2, maxFractionDigits: 2, groupingEnabled: false}}" wrapping="false"/>
 
                                     <!-- ── Summary / Green columns ───────────────────── -->
-                                    <ObjectNumber
+                                    <!-- <ObjectNumber
                                         number="{path: 'TableDataModel>InvoiceValue', type: 'sap.ui.model.type.Float', formatOptions: {minFractionDigits: 2, maxFractionDigits: 2, groupingEnabled: true}}"
-                                        unit="{TableDataModel>TransactionCurrency}"
-                                        emphasized="true"
-                                    />
+                                    /> -->
+                                    <Text text="{path: 'TableDataModel>InvoiceValue', type: 'sap.ui.model.type.Float',
+      formatOptions: {minFractionDigits: 2, maxFractionDigits: 2, groupingEnabled: true}}"
+      wrapping="false"/>
                                     <!-- FIX: backend returns lowercase 'class' -->
                                     <Text text="{TableDataModel>class}"                              wrapping="false"/>
                                     <Text text="{TableDataModel>SalesOrderDistributionChannel}"      wrapping="false"/>
