@@ -462,6 +462,10 @@ sap.ui.define([
             }
         },
 
+        onValueHelpCancel: function () {
+            this._oDivDialog.close();
+        },
+
         onDivisionSearch: function (oEvent) {
             var sQuery = oEvent.getParameter("value");
             var oFilter = new Filter("Division", FilterOperator.Contains, sQuery);
@@ -470,13 +474,15 @@ sap.ui.define([
 
         // ─── Sort Function ─────────────────────────────────────────────────────────
         onSortButtonPressed: function () {
+            var oView = this.getView();
             if (!this._oSortDialog) {
-                this._oSortDialog = Fragment.load({
-                    id: this.getView().getId(),
+                Fragment.load({
+                    id: oView.getId(),
                     name: "com.bgl.app.salesregister.Fragment.SortDialog",
                     controller: this
                 }).then(function (oDialog) {
                     this._oSortDialog = oDialog;
+                    oView.addDependent(oDialog);
                     oDialog.open();
                 }.bind(this));
             } else {
