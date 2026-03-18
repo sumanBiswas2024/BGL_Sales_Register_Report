@@ -265,6 +265,17 @@ sap.ui.define([
             readPage();
         },
 
+        onTableUpdateStarted: function () {
+            sap.ui.core.BusyIndicator.show(0);
+        },
+
+        onTableUpdateFinished: function () {
+            if (this._bAllPagesLoaded) {
+                this._bAllPagesLoaded = false;
+            }
+            sap.ui.core.BusyIndicator.hide();
+        },
+
         // ─── Grand Total Row Builder ──────────────────────────────────────────────
         /**
          * Iterates all data rows, sums every numeric value field, and returns a
@@ -338,14 +349,6 @@ sap.ui.define([
             oTotal.TcsPer = null;
 
             return oTotal;
-        },
-
-        // ─── Table updateFinished — hide busy only after all pages are loaded ──────
-        onTableUpdateFinished: function () {
-            if (this._bAllPagesLoaded) {
-                this._bAllPagesLoaded = false;
-                sap.ui.core.BusyIndicator.hide();
-            }
         },
 
         // ─── Date formatter for first column ─────────────────────────────────────
