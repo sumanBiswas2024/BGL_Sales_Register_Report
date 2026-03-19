@@ -113,6 +113,11 @@
                         visible="false"
                     />
                     <Button
+                        icon="sap-icon://action-settings"
+                        tooltip="Column Settings"
+                        press=".onColumnSettings"
+                    />
+                    <Button
                         icon="sap-icon://excel-attachment"
                         press="onExport"
                         tooltip="Export to Excel"

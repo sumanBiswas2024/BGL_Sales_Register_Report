@@ -8,8 +8,11 @@ sap.ui.define([
     "sap/ui/export/library",
     "sap/ui/export/Spreadsheet",
     "sap/m/MessageToast",
-    "sap/ui/core/Fragment"
-], function (Controller, JSONModel, Filter, FilterOperator, PersonalizableInfo, MessageBox, exportLibrary, Spreadsheet, MessageToast, Fragment) {
+    "sap/ui/core/Fragment",
+    "sap/m/P13nDialog",
+    "sap/m/P13nColumnsPanel",
+    "sap/m/P13nColumnsItem"
+], function (Controller, JSONModel, Filter, FilterOperator, PersonalizableInfo, MessageBox, exportLibrary, Spreadsheet, MessageToast, Fragment, P13nDialog, P13nColumnsPanel, P13nColumnsItem) {
     "use strict";
 
     const EdmType = exportLibrary.EdmType;
@@ -40,6 +43,26 @@ sap.ui.define([
             var oTableDataModel = new JSONModel();
             oTableDataModel.setSizeLimit(1000000);
             this.getView().setModel(oTableDataModel, "TableDataModel");
+
+            // Build columns model for personalization
+            // var aColumns = this.byId("idSalesTable").getColumns().map(function (oCol, i) {
+            //     return {
+            //         key: "col" + i,
+            //         label: oCol.getHeader().getText(),
+            //         visible: true,
+            //         index: i
+            //     };
+            // });
+            // this.getView().setModel(new JSONModel({ columns: aColumns }), "ColumnsModel");
+            var aColumns = this.byId("idSalesTable").getColumns().map(function (oCol, i) {
+                return { key: "col" + i, label: oCol.getHeader().getText(), visible: true, index: i };
+            });
+            this.getView().setModel(new JSONModel({
+                columns: aColumns,
+                allSelected: true,
+                selectedCount: aColumns.length,
+                totalCount: aColumns.length
+            }), "ColumnsModel");
 
             var oDivModel = new JSONModel();
             this.getView().setModel(oDivModel, "DivisionModel");
@@ -526,6 +549,89 @@ sap.ui.define([
             if (oGrandTotal) { aData.push(oGrandTotal); }
 
             this.getView().getModel("TableDataModel").setProperty("/results", aData);
+        },
+
+        // ─── View Setting Function ─────────────────────────────────────────────────────────
+        onColumnSettings: function () {
+            var oView = this.getView();
+            if (!this._oColumnDialog) {
+                Fragment.load({
+                    id: oView.getId(),
+                    name: "com.bgl.app.salesregister.Fragment.ColumnDialog",
+                    controller: this
+                }).then(function (oDialog) {
+                    this._oColumnDialog = oDialog;
+                    oView.addDependent(oDialog);
+                    oDialog.open();
+                }.bind(this));
+            } else {
+                this._oColumnDialog.open();
+            }
+        },
+
+        onColumnDialogOk: function () {
+            var aTableColumns = this.byId("idSalesTable").getColumns();
+            var aModelColumns = this.getView().getModel("ColumnsModel").getProperty("/columns");
+
+            aModelColumns.forEach(function (oItem) {
+                aTableColumns[oItem.index].setVisible(oItem.visible);
+            });
+
+            this._oColumnDialog.close();
+        },
+
+        onColumnDialogCancel: function () {
+            // Revert checkbox states to match actual column visibility
+            var aTableColumns = this.byId("idSalesTable").getColumns();
+            var aModelColumns = this.getView().getModel("ColumnsModel").getProperty("/columns");
+
+            aModelColumns.forEach(function (oItem) {
+                oItem.visible = aTableColumns[oItem.index].getVisible();
+            });
+            this.getView().getModel("ColumnsModel").refresh();
+
+            this._oColumnDialog.close();
+        },
+
+        onColumnDialogReset: function () {
+            var oModel = this.getView().getModel("ColumnsModel");
+            var aColumns = oModel.getProperty("/columns");
+            aColumns.forEach(function (oCol) { oCol.visible = true; });
+            oModel.setProperty("/columns", aColumns);
+            oModel.setProperty("/allSelected", true);
+            oModel.setProperty("/selectedCount", aColumns.length);
+            this.byId("idSalesTable").getColumns().forEach(function (oCol) { oCol.setVisible(true); });
+        },
+
+        onColumnSearch: function (oEvent) {
+            var sQuery = oEvent.getParameter("newValue").toLowerCase();
+            var oList = this.byId("idColumnList");
+            if (!oList) { return; }
+
+            oList.getItems().forEach(function (oItem) {
+                var sLabel = oItem.getContent()[0].getItems()[0].getText().toLowerCase();
+                oItem.setVisible(sQuery === "" || sLabel.indexOf(sQuery) !== -1);
+            });
+        },
+        onSelectAllColumns: function (oEvent) {
+            var bSelected = oEvent.getParameter("selected");
+            var oModel = this.getView().getModel("ColumnsModel");
+            var aColumns = oModel.getProperty("/columns");
+
+            aColumns.forEach(function (oCol) { oCol.visible = bSelected; });
+
+            oModel.setProperty("/columns", aColumns);
+            oModel.setProperty("/allSelected", bSelected);
+            oModel.setProperty("/selectedCount", bSelected ? aColumns.length : 0);
+        },
+
+        onSingleColumnSelect: function () {
+            var oModel = this.getView().getModel("ColumnsModel");
+            var aColumns = oModel.getProperty("/columns");
+            var iVisible = aColumns.filter(function (c) { return c.visible; }).length;
+
+            oModel.setProperty("/selectedCount", iVisible);
+            oModel.setProperty("/allSelected", iVisible === aColumns.length);
         },
 
         // ─── Excel Export ─────────────────────────────────────────────────────────

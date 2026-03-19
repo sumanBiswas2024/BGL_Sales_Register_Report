@@ -1,0 +1,70 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+    <Dialog
+        id="idColumnDialog"
+        contentWidth="380px"
+        contentHeight="500px"
+        resizable="true"
+        draggable="true"
+    >
+        <subHeader>
+            <Toolbar>
+                <SearchField
+                    id="idColumnSearch"
+                    width="100%"
+                    liveChange=".onColumnSearch"
+                    placeholder="Search columns..."
+                />
+            </Toolbar>
+        </subHeader>
+        <content>
+            <!-- Select All row with count -->
+            <VBox>
+                <CustomListItem>
+                    <HBox alignItems="Center" class="sapUiSmallMarginBegin sapUiSmallMarginTopBottom">
+                        <CheckBox
+                            id="idSelectAllColumns"
+                            text="{= 'Columns (' + ${ColumnsModel>/selectedCount} + '/' + ${ColumnsModel>/totalCount} + ')'}"
+                            selected="{ColumnsModel>/allSelected}"
+                            select=".onSelectAllColumns"
+                        />
+                    </HBox>
+                </CustomListItem>
+                <List
+                    id="idColumnList"
+                    mode="None"
+                    items="{ColumnsModel>/columns}"
+                >
+                    <items>
+                        <CustomListItem>
+                            <HBox alignItems="Center" width="100%" class="sapUiSmallMarginBegin">
+                                <CheckBox
+                                    selected="{ColumnsModel>visible}"
+                                    text="{ColumnsModel>label}"
+                                    select=".onSingleColumnSelect"
+                                />
+                            </HBox>
+                        </CustomListItem>
+                    </items>
+                </List>
+            </VBox>
+        </content>
+        <beginButton>
+            <Button text="OK" type="Emphasized" press=".onColumnDialogOk"/>
+        </beginButton>
+        <endButton>
+            <Button text="Cancel" press=".onColumnDialogCancel"/>
+        </endButton>
+        <customHeader>
+            <Bar>
+                <contentLeft>
+                    <Title text="View Settings"/>
+                </contentLeft>
+                <contentRight>
+                    <Button text="Reset" press=".onColumnDialogReset"/>
+                </contentRight>
+            </Bar>
+        </customHeader>
+    </Dialog>
+</core:FragmentDefinition>
