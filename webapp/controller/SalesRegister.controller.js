@@ -38,6 +38,7 @@ sap.ui.define([
             this.oSmartVariantManagement.initialise(function () { }, this._oFilterBar);
 
             var oTableDataModel = new JSONModel();
+            oTableDataModel.setSizeLimit(1000000);
             this.getView().setModel(oTableDataModel, "TableDataModel");
 
             var oDivModel = new JSONModel();
@@ -202,6 +203,10 @@ sap.ui.define([
                 var mParameters = {
                     success: function (oData) {
                         var aPage = (oData && oData.results) ? oData.results : [];
+
+                        console.log("Batch fetched:", aPage.length, "| Total so far:", aAllResults.length + aPage.length, "| Has next:", !!oData.__next);
+                        console.log("Batch data:", aPage);
+
                         aAllResults = aAllResults.concat(aPage);
 
                         if (oData.__next) {

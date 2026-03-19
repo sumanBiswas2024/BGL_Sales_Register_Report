@@ -130,9 +130,6 @@
                         sticky="ColumnHeaders"
                         fixedLayout="false"
                         class="tableWrapper"
-                        growing="true"
-                        growingThreshold="500"
-                        growingScrollToLoad="false"
                         updateStarted=".onTableUpdateStarted"
                         updateFinished=".onTableUpdateFinished"
                     >
