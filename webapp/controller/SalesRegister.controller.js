@@ -648,18 +648,31 @@ sap.ui.define([
             //     return oExport;
             // });
 
-            var aNumericFields = [
-                "BillingQuantity", "PriceToUpdate", "TradeMargin", "DiscountExcl", "ExciseDutySt",
-                "TaxableValue", "EdRecovery", "ExciseDuty", "NetTaxableValue", "TaxRatePer",
-                "TaxVatRs", "Igst", "IgstPer", "Cgst", "CgstPer", "Sgst", "SgstPer",
-                "Tcs", "TcsPer", "InvoiceValue", "DailyAuthQty"
-            ];
+            // var aNumericFields = [
+            //     "BillingQuantity", "PriceToUpdate", "TradeMargin", "DiscountExcl", "ExciseDutySt",
+            //     "TaxableValue", "EdRecovery", "ExciseDuty", "NetTaxableValue", "TaxRatePer",
+            //     "TaxVatRs", "Igst", "IgstPer", "Cgst", "CgstPer", "Sgst", "SgstPer",
+            //     "Tcs", "TcsPer", "InvoiceValue", "DailyAuthQty"
+            // ];
 
             // var aExportRows = aAllRows.map(function (oRow) {
             //     var oExport = Object.assign({}, oRow);
             //     if (oExport.IsGrandTotal) {
             //         oExport.BillingDocumentDate = "Grand Total";
             //         oExport.BillingDocument = "";
+            //     } else {
+            //         // Format date as DD/MM/YYYY for Excel (same as table display)
+            //         if (oExport.BillingDocumentDate) {
+            //             var d = oExport.BillingDocumentDate instanceof Date
+            //                 ? oExport.BillingDocumentDate
+            //                 : new Date(oExport.BillingDocumentDate);
+            //             if (!isNaN(d.getTime())) {
+            //                 oExport.BillingDocumentDate =
+            //                     ("0" + d.getDate()).slice(-2) + "/" +
+            //                     ("0" + (d.getMonth() + 1)).slice(-2) + "/" +
+            //                     d.getFullYear();
+            //             }
+            //         }
             //     }
             //     // Convert string decimals to numbers so Excel scale formatting works correctly
             //     aNumericFields.forEach(function (sField) {
@@ -670,13 +683,20 @@ sap.ui.define([
             //     return oExport;
             // });
 
+            var aQty3Fields = ["BillingQuantity", "DailyAuthQty"];
+            var aNumericFields = [
+                "BillingQuantity", "PriceToUpdate", "TradeMargin", "DiscountExcl", "ExciseDutySt",
+                "TaxableValue", "EdRecovery", "ExciseDuty", "NetTaxableValue", "TaxRatePer",
+                "TaxVatRs", "Igst", "IgstPer", "Cgst", "CgstPer", "Sgst", "SgstPer",
+                "Tcs", "TcsPer", "InvoiceValue", "DailyAuthQty"
+            ];
+
             var aExportRows = aAllRows.map(function (oRow) {
                 var oExport = Object.assign({}, oRow);
                 if (oExport.IsGrandTotal) {
                     oExport.BillingDocumentDate = "Grand Total";
                     oExport.BillingDocument = "";
                 } else {
-                    // Format date as DD/MM/YYYY for Excel (same as table display)
                     if (oExport.BillingDocumentDate) {
                         var d = oExport.BillingDocumentDate instanceof Date
                             ? oExport.BillingDocumentDate
@@ -689,10 +709,13 @@ sap.ui.define([
                         }
                     }
                 }
-                // Convert string decimals to numbers so Excel scale formatting works correctly
+                // Format to fixed decimals — ensures 90 → 90.000, 2.38 → 2.38
                 aNumericFields.forEach(function (sField) {
                     if (oExport[sField] !== null && oExport[sField] !== undefined) {
-                        oExport[sField] = parseFloat(oExport[sField]) || 0;
+                        var iDecimals = aQty3Fields.indexOf(sField) !== -1 ? 3 : 2;
+                        oExport[sField] = parseFloat(
+                            parseFloat(oExport[sField]).toFixed(iDecimals)
+                        );
                     }
                 });
                 return oExport;
@@ -730,34 +753,34 @@ sap.ui.define([
                 { label: "GA of BGL", property: "Plant", type: EdmType.String },
                 { label: "Material Code", property: "Material", type: EdmType.String },
                 { label: "Material Name", property: "BillingDocumentItemText", type: EdmType.String },
-                { label: "Billing Quantity", property: "BillingQuantity", type: EdmType.Decimal, scale: 3 },
+                { label: "Billing Quantity", property: "BillingQuantity", type: EdmType.Number, scale: 2 },
                 { label: "Billing UOM", property: "BillingQuantityUnit", type: EdmType.String },
 
                 // ── Pricing / Yellow columns ──────────────────────────────────────
-                { label: "Price to Update", property: "PriceToUpdate", type: EdmType.Decimal, scale: 2 },
-                { label: "Trade Margin", property: "TradeMargin", type: EdmType.Decimal, scale: 2 },
-                { label: "Discount Excluding", property: "DiscountExcl", type: EdmType.Decimal, scale: 2 },
-                { label: "Excise Duty ST", property: "ExciseDutySt", type: EdmType.Decimal, scale: 2 },
-                { label: "Taxable Value (Rs.)", property: "TaxableValue", type: EdmType.Decimal, scale: 2 },
-                { label: "ED Recovery", property: "EdRecovery", type: EdmType.Decimal, scale: 2 },
-                { label: "Excise Duty", property: "ExciseDuty", type: EdmType.Decimal, scale: 2 },
-                { label: "Net Taxable Value (Rs.)", property: "NetTaxableValue", type: EdmType.Decimal, scale: 2 },
-                { label: "Tax Rate % (VAT)", property: "TaxRatePer", type: EdmType.Decimal, scale: 2 },
-                { label: "Tax (Rs.) - VAT", property: "TaxVatRs", type: EdmType.Decimal, scale: 2 },
-                { label: "IGST", property: "Igst", type: EdmType.Decimal, scale: 2 },
-                { label: "IGST %", property: "IgstPer", type: EdmType.Decimal, scale: 2 },
-                { label: "CGST", property: "Cgst", type: EdmType.Decimal, scale: 2 },
-                { label: "CGST %", property: "CgstPer", type: EdmType.Decimal, scale: 2 },
-                { label: "SGST", property: "Sgst", type: EdmType.Decimal, scale: 2 },
-                { label: "SGST %", property: "SgstPer", type: EdmType.Decimal, scale: 2 },
-                { label: "TCS", property: "Tcs", type: EdmType.Decimal, scale: 2 },
-                { label: "TCS %", property: "TcsPer", type: EdmType.Decimal, scale: 2 },
+                { label: "Price to Update", property: "PriceToUpdate", type: EdmType.Number, scale: 2 },
+                { label: "Trade Margin", property: "TradeMargin", type: EdmType.Number, scale: 2 },
+                { label: "Discount Excluding", property: "DiscountExcl", type: EdmType.Number, scale: 2 },
+                { label: "Excise Duty ST", property: "ExciseDutySt", type: EdmType.Number, scale: 2 },
+                { label: "Taxable Value (Rs.)", property: "TaxableValue", type: EdmType.Number, scale: 2 },
+                { label: "ED Recovery", property: "EdRecovery", type: EdmType.Number, scale: 2 },
+                { label: "Excise Duty", property: "ExciseDuty", type: EdmType.Number, scale: 2 },
+                { label: "Net Taxable Value (Rs.)", property: "NetTaxableValue", type: EdmType.Number, scale: 2 },
+                { label: "Tax Rate % (VAT)", property: "TaxRatePer", type: EdmType.Number, scale: 2 },
+                { label: "Tax (Rs.) - VAT", property: "TaxVatRs", type: EdmType.Number, scale: 2 },
+                { label: "IGST", property: "Igst", type: EdmType.Number, scale: 2 },
+                { label: "IGST %", property: "IgstPer", type: EdmType.Number, scale: 2 },
+                { label: "CGST", property: "Cgst", type: EdmType.Number, scale: 2 },
+                { label: "CGST %", property: "CgstPer", type: EdmType.Number, scale: 2 },
+                { label: "SGST", property: "Sgst", type: EdmType.Number, scale: 2 },
+                { label: "SGST %", property: "SgstPer", type: EdmType.Number, scale: 2 },
+                { label: "TCS", property: "Tcs", type: EdmType.Number, scale: 2 },
+                { label: "TCS %", property: "TcsPer", type: EdmType.Number, scale: 2 },
 
                 // ── Summary / Green columns ───────────────────────────────────────
-                { label: "Invoice Value (Rs.)", property: "InvoiceValue", type: EdmType.Decimal, scale: 2 },
+                { label: "Invoice Value (Rs.)", property: "InvoiceValue", type: EdmType.Number, scale: 2 },
                 { label: "Class", property: "class", type: EdmType.String },
                 { label: "Distribution Channel", property: "SalesOrderDistributionChannel", type: EdmType.String },
-                { label: "Daily Authorized Quantity", property: "DailyAuthQty", type: EdmType.Decimal, scale: 3 },
+                { label: "Daily Authorized Quantity", property: "DailyAuthQty", type: EdmType.Number, scale: 2 },
                 { label: "Daily Authorized Quantity (UOM)", property: "DailyAuthUnit", type: EdmType.String }
             ];
         }

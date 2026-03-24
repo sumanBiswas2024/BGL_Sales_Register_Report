@@ -116,6 +116,7 @@
                         icon="sap-icon://action-settings"
                         tooltip="Column Settings"
                         press=".onColumnSettings"
+                        visible="false"
                     />
                     <Button
                         icon="sap-icon://excel-attachment"
@@ -479,7 +480,7 @@
                                         wrapping="false"
                                     />
                                     <Text
-                                        text="{path: 'TableDataModel>BillingQuantity', type: 'sap.ui.model.type.Float', formatOptions: {minFractionDigits: 3, maxFractionDigits: 3, groupingEnabled: true}}"
+                                        text="{path: 'TableDataModel>BillingQuantity', type: 'sap.ui.model.type.Float', formatOptions: {minFractionDigits: 2, maxFractionDigits: 2, groupingEnabled: true}}"
                                         wrapping="false"
                                     />
                                     <Text
@@ -571,7 +572,7 @@
                                         wrapping="false"
                                     />
                                     <Text
-                                        text="{path: 'TableDataModel>DailyAuthQty',    type: 'sap.ui.model.type.Float', formatOptions: {minFractionDigits: 3, maxFractionDigits: 3, groupingEnabled: true}}"
+                                        text="{path: 'TableDataModel>DailyAuthQty',    type: 'sap.ui.model.type.Float', formatOptions: {minFractionDigits: 2, maxFractionDigits: 2, groupingEnabled: true}}"
                                         wrapping="false"
                                     />
                                     <Text

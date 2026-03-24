@@ -21,6 +21,6 @@ builder:
           name: ZSALES_REGISTER
           description: Sales Register
           package: ZFIORI
-          transport: KUNK900891
+          transport: KUNK900920
         exclude:
           - /test/
