@@ -319,7 +319,7 @@ sap.ui.define([
                 "TaxVatRs",
                 "Igst", "Cgst", "Sgst", "Tcs",
                 "TaxAmount", "InvoiceValue",
-                "DailyAuthQty"
+                "DailyAuthQty","QtyAltUom"
             ];
 
             // Initialise totals to 0
@@ -363,6 +363,7 @@ sap.ui.define([
             oTotal.BillingQuantityUnit = "";
             oTotal.SalesOrderDistributionChannel = "";
             oTotal.DailyAuthUnit = "";
+            oTotal.Altuom = "";
             oTotal["class"] = "";
             oTotal.TransactionCurrency = "";
 
@@ -688,7 +689,7 @@ sap.ui.define([
                 "BillingQuantity", "PriceToUpdate", "TradeMargin", "DiscountExcl", "ExciseDutySt",
                 "TaxableValue", "EdRecovery", "ExciseDuty", "NetTaxableValue", "TaxRatePer",
                 "TaxVatRs", "Igst", "IgstPer", "Cgst", "CgstPer", "Sgst", "SgstPer",
-                "Tcs", "TcsPer", "InvoiceValue", "DailyAuthQty"
+                "Tcs", "TcsPer", "InvoiceValue", "DailyAuthQty","QtyAltUom"
             ];
 
             var aExportRows = aAllRows.map(function (oRow) {
@@ -781,7 +782,9 @@ sap.ui.define([
                 { label: "Class", property: "class", type: EdmType.String },
                 { label: "Distribution Channel", property: "SalesOrderDistributionChannel", type: EdmType.String },
                 { label: "Daily Authorized Quantity", property: "DailyAuthQty", type: EdmType.Number, scale: 2 },
-                { label: "Daily Authorized Quantity (UOM)", property: "DailyAuthUnit", type: EdmType.String }
+                { label: "Daily Authorized Quantity (UOM)", property: "DailyAuthUnit", type: EdmType.String },
+                { label: "Quantity in Alternative UOM", property: "QtyAltUom", type: EdmType.Number, scale: 2 },
+                { label: "Alternative UOM", property: "Altuom", type: EdmType.String }
             ];
         }
     });

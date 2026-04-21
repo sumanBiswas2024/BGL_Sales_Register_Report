@@ -398,6 +398,18 @@
                                     wrapping="false"
                                 />
                             </Column>
+                            <Column width="35rem">
+                                <Text
+                                    text="Quantity in Alternative UOM"
+                                    wrapping="false"
+                                />
+                            </Column>
+                            <Column width="35rem">
+                                <Text
+                                    text="Alternative UOM"
+                                    wrapping="false"
+                                />
+                            </Column>
                         </columns>
 
                         <items>
@@ -577,6 +589,14 @@
                                     />
                                     <Text
                                         text="{TableDataModel>DailyAuthUnit}"
+                                        wrapping="false"
+                                    />
+                                    <Text
+                                        text="{path: 'TableDataModel>QtyAltUom',    type: 'sap.ui.model.type.Float', formatOptions: {minFractionDigits: 2, maxFractionDigits: 2, groupingEnabled: true}}"
+                                        wrapping="false"
+                                    />
+                                    <Text
+                                        text="{TableDataModel>Altuom}"
                                         wrapping="false"
                                     />
                                 </cells>
